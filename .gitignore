@@ -1,0 +1,23 @@
+# Build outputs
+bin/
+bin-int/
+
+# Generated project files
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+Makefile
+*.make
+
+# IDE files
+.vs/
+*.suo
+*.user
+
+# Claude files
+CLAUDE.md
+
+# OS files
+.DS_Store
+Thumbs.db

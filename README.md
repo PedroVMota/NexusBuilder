@@ -1,1 +1,2 @@
 # Botapica
+.claude
