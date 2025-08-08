@@ -5,6 +5,87 @@ workspace "Botapica"
 
     outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
+project "GLEW"
+    location "lib/glew"
+    kind "StaticLib"
+    language "C"
+    staticruntime "on"
+
+    targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+    objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
+    files
+    {
+        "lib/glew/src/glew.c"
+    }
+
+    includedirs
+    {
+        "lib/glew/include"
+    }
+
+    defines
+    {
+        "GLEW_STATIC"
+    }
+
+    filter "configurations:Debug"
+        runtime "Debug"
+        symbols "on"
+        optimize "off"
+
+    filter "configurations:Release"
+        runtime "Release"
+        symbols "on"
+        optimize "on"
+
+    filter "system:windows"
+        systemversion "latest"
+        links { "opengl32" }
+
+    filter "system:linux"
+        links { "GL" }
+
+    filter "system:macosx"
+        links { "OpenGL.framework" }
+
+project "ImGui"
+    location "lib/imgui"
+    kind "StaticLib"
+    language "C++"
+    cppdialect "C++17"
+    staticruntime "on"
+
+    targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+    objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
+    files
+    {
+        "lib/imgui/imgui.cpp",
+        "lib/imgui/imgui_demo.cpp",
+        "lib/imgui/imgui_draw.cpp",
+        "lib/imgui/imgui_tables.cpp",
+        "lib/imgui/imgui_widgets.cpp"
+    }
+
+    includedirs
+    {
+        "lib/imgui"
+    }
+
+    filter "configurations:Debug"
+        runtime "Debug"
+        symbols "on"
+        optimize "off"
+
+    filter "configurations:Release"
+        runtime "Release"
+        symbols "on"
+        optimize "on"
+
+    filter "system:windows"
+        systemversion "latest"
+
 project "Botapica"
     location "."
     kind "ConsoleApp"
@@ -26,12 +107,14 @@ project "Botapica"
     includedirs
     {
         "Include",
-        "lib"
+        "lib/glew/include",
+        "lib/imgui"
     }
 
-    libdirs
+    links
     {
-        "lib"
+        "GLEW",
+        "ImGui"
     }
 
     filter "configurations:Debug"
