@@ -87,6 +87,10 @@ Botapica/
 
 ## 🎮 Features (Planned)
 
+- [ ] Render Pipeline
+- [ ] 3D Viewport
+- [ ] File manager
+- [ ] Menus & Settings
 - [ ] 3D Model Loading
 - [ ] Shader Management System
 - [ ] Scene Graph
