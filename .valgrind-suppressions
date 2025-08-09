@@ -1,0 +1,18 @@
+{
+   Mesa-GLX-Driver-Leak-1
+   Memcheck:Leak
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/libGLX_mesa.so*
+}
+{
+   Mesa-GLX-Driver-Leak-2
+   Memcheck:Leak
+   ...
+   fun:extensionSupportedGLX
+}
+{
+   Mesa-GLX-Driver-Leak-3
+   Memcheck:Leak
+   ...
+   fun:_glfwInitGLX
+}

@@ -20,8 +20,13 @@ project "GLFW"
 		"lib/glfw/src/init.c",
 		"lib/glfw/src/input.c",
 		"lib/glfw/src/monitor.c",
+		"lib/glfw/src/platform.c",
 		"lib/glfw/src/vulkan.c",
-		"lib/glfw/src/window.c"
+		"lib/glfw/src/window.c",
+		"lib/glfw/src/null_init.c",
+		"lib/glfw/src/null_monitor.c",
+		"lib/glfw/src/null_window.c",
+		"lib/glfw/src/null_joystick.c"
 	}
 
 	includedirs
@@ -42,6 +47,8 @@ project "GLFW"
 			"lib/glfw/src/xkb_unicode.c",
 			"lib/glfw/src/posix_time.c",
 			"lib/glfw/src/posix_thread.c",
+			"lib/glfw/src/posix_module.c",
+			"lib/glfw/src/posix_poll.c",
 			"lib/glfw/src/glx_context.c",
 			"lib/glfw/src/egl_context.c",
 			"lib/glfw/src/osmesa_context.c",
@@ -96,49 +103,7 @@ project "GLFW"
 		symbols "on"
 		optimize "on"
 
-project "GLEW"
-	location "lib/glew"
-	kind "StaticLib"
-	language "C"
-	staticruntime "on"
-
-	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
-	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
-
-	files
-	{
-		"lib/glew/src/glew.c"
-	}
-
-	includedirs
-	{
-		"lib/glew/include"
-	}
-
-	defines
-	{
-		"GLEW_STATIC"
-	}
-
-	filter "configurations:Debug"
-		runtime "Debug"
-		symbols "on"
-		optimize "off"
-
-	filter "configurations:Release"
-		runtime "Release"
-		symbols "on"
-		optimize "on"
-
-	filter "system:windows"
-		systemversion "latest"
-		links { "opengl32" }
-
-	filter "system:linux"
-		links { "GL" }
-
-	filter "system:macosx"
-		links { "OpenGL.framework" }
+-- GLEW project removed - using system GLEW installation
 
 project "ImGui"
 	location "lib/imgui"
@@ -165,14 +130,11 @@ project "ImGui"
 	{
 		"lib/imgui",
 		"lib/imgui/backends",
-		"lib/glfw/include",
-		"lib/glew/include"
+		"lib/glfw/include"
+		-- System GLEW headers will be found automatically
 	}
 
-	defines
-	{
-		"GLEW_STATIC"
-	}
+	-- Remove GLEW_STATIC define since we're using system GLEW
 
 	filter "configurations:Debug"
 		runtime "Debug"
@@ -208,24 +170,21 @@ project "Botapica"
 	includedirs
 	{
 		"Include",
-		"lib/glew/include",
 		"lib/glfw/include",
 		"lib/imgui",
 		"lib/imgui/backends",
 		"lib/glm"
+		-- System GLEW headers will be found automatically
 	}
 
 	links
 	{
 		"GLFW",
-		"GLEW",
 		"ImGui"
+		-- GLEW removed - using system installation
 	}
 
-	defines
-	{
-		"GLEW_STATIC"
-	}
+	-- Remove GLEW_STATIC define since we're using system GLEW
 
 	filter "configurations:Debug"
 		defines "DEBUG"
@@ -245,7 +204,16 @@ project "Botapica"
 
 	filter "system:linux"
 		defines "PLATFORM_LINUX"
-		links { "pthread", "GL" } -- Added GL here for final linking
+		links { 
+			"X11", 
+			"Xcursor", 
+			"Xinerama", 
+			"Xrandr", 
+			"pthread", 
+			"GL",
+			"GLEW",  -- System GLEW library
+			"dl"
+		}
 
 	filter "system:macosx"
 		defines "PLATFORM_MACOS"
