@@ -253,3 +253,7 @@ project "Botapica"
 		}
 		libdirs { "/opt/homebrew/lib" }  -- Homebrew library path
 		includedirs { "/opt/homebrew/include" }  -- Homebrew include path
+
+	filter { "system:macosx", "configurations:Debug" }
+		buildoptions { "-fsanitize=address" }
+		linkoptions { "-fsanitize=address" }
