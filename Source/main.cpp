@@ -2,29 +2,21 @@
 
 void LogGPUInfo()
 {
-	BOTAPICA_LOG_INFO(std::string("OpenGL Version: ") + reinterpret_cast<const char*>(glGetString(GL_VERSION)));
-	BOTAPICA_LOG_INFO(std::string("GPU: ") + reinterpret_cast<const char*>(glGetString(GL_RENDERER)));
-	BOTAPICA_LOG_INFO(std::string("OpenGL Vendor: ") + reinterpret_cast<const char*>(glGetString(GL_VENDOR)));
+	BOTAPICA_LOG_INFO(String("OpenGL Version: ") + reinterpret_cast<const char*>(glGetString(GL_VERSION)));
+	BOTAPICA_LOG_INFO(String("GPU: ") + reinterpret_cast<const char*>(glGetString(GL_RENDERER)));
+	BOTAPICA_LOG_INFO(String("OpenGL Vendor: ") + reinterpret_cast<const char*>(glGetString(GL_VENDOR)));
 
-	std::string renderer = reinterpret_cast<const char*>(glGetString(GL_RENDERER));
+	String renderer = reinterpret_cast<const char*>(glGetString(GL_RENDERER));
 	if (renderer.find("llvmpipe") != std::string::npos) 
 		BOTAPICA_LOG_INFO("Using software rendering (llvmpipe). GPU acceleration not available.");
 	else if (renderer.find("NVIDIA") != std::string::npos)
 		BOTAPICA_LOG_INFO("NVIDIA GPU acceleration detected!");
-
 	else
 		BOTAPICA_LOG_INFO("Hardware-accelerated rendering detected.");
 }
 
-int main()
+void SetupGLFWHints()
 {
-	BOTAPICA_LOG_INFO("Initializing Botapica Engine...");
-
-	if (!glfwInit())
-	{
-		BOTAPICA_LOG_ERROR("Failed to initialize GLFW!");
-		return -1;
-	}
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -36,6 +28,19 @@ int main()
 #ifdef BOTAPICA_DEBUG
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
 #endif
+}
+
+int main()
+{
+	BOTAPICA_LOG_INFO("Initializing Botapica Engine...");
+
+	if (!glfwInit())
+	{
+		BOTAPICA_LOG_ERROR("Failed to initialize GLFW!");
+		return -1;
+	}
+
+	SetupGLFWHints();
 
 	GLFWwindow* window = glfwCreateWindow(WIDHT, HEIGHT, "3D Engine", nullptr, nullptr);
 
