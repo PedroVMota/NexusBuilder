@@ -12,8 +12,11 @@ Makefile
 
 # IDE files
 .vs/
+.vscode/
+.claude/
 *.suo
 *.user
+
 
 # Claude files
 CLAUDE.md

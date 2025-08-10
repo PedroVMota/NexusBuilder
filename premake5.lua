@@ -191,12 +191,14 @@ project "Botapica"
 		runtime "Debug"
 		symbols "on"
 		optimize "off"
+		buildoptions { "-MMD -MP" } 
 
 	filter "configurations:Release"
 		defines "RELEASE"
 		runtime "Release"
 		symbols "on"
 		optimize "on"
+		buildoptions { "-MMD -MP" }  
 
 	filter "system:windows"
 		systemversion "latest"

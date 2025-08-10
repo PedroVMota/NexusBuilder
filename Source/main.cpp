@@ -1,4 +1,4 @@
-#include "main.hpp"
+#include "Core.h"
 
 void LogGPUInfo()
 {
@@ -17,6 +17,15 @@ void LogGPUInfo()
 
 void SetupGLFWHints()
 {
+<<<<<<< Updated upstream
+=======
+#ifdef PLATFORM_MACOS
+	BOTAPICA_LOG_INFO("Setting up GLFW hints for macOS...");
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+#else
+	BOTAPICA_LOG_INFO("Setting up GLFW hints for Windows/Linux...");
+>>>>>>> Stashed changes
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -73,15 +82,23 @@ int main()
 
 	BOTAPICA_LOG_INFO("Engine initialized successfully");
 
+	// Example object creation
+	GameObject* testObj1 = GameObject::CreateGameObject("TestObject1", Vec3(1.0f, 2.0f, 3.0f));
+	GameObject* testObj2 = GameObject::CreateGameObject("TestObject2");
+	Object* baseObj = new Object("BaseObject");
+	
+	ObjectManager::LogObjectStats();
 
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
-	ImGuiIO &io = ImGui::GetIO(); (void)io;
+	ImGuiIO &io = ImGui::GetIO();
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	ImGui::StyleColorsDark();
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init("#version 330");
 
+
+	Mesh triangle = Mesh::CreateTriangle();
 	// Main loop
 	while (!glfwWindowShouldClose(window))
 	{
@@ -100,6 +117,9 @@ int main()
 		ImGui::Text("test text");
 		ImGui::End();
 
+		// Draw mesh before ImGui to avoid state conflicts
+		triangle.draw();
+		
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
@@ -109,6 +129,10 @@ int main()
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
 	ImGui::DestroyContext();
+
+	// Cleanup object system
+	ObjectManager::ProcessDestroyQueue();
+	ObjectManager::DestroyAllObjects();
 
 	glfwDestroyWindow(window);
 	glfwTerminate();
