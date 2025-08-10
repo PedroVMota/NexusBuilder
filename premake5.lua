@@ -93,6 +93,30 @@ project "GLFW"
 			"_CRT_SECURE_NO_WARNINGS"
 		}
 
+	filter "system:macosx"
+		systemversion "10.15"
+		staticruntime "on"
+
+		files
+		{
+			"lib/glfw/src/cocoa_init.m",
+			"lib/glfw/src/cocoa_joystick.m",
+			"lib/glfw/src/cocoa_monitor.m",
+			"lib/glfw/src/cocoa_window.m",
+			"lib/glfw/src/cocoa_time.c",
+			"lib/glfw/src/posix_thread.c",
+			"lib/glfw/src/posix_module.c",
+			"lib/glfw/src/nsgl_context.m",
+			"lib/glfw/src/egl_context.c",
+			"lib/glfw/src/osmesa_context.c"
+		}
+
+		defines
+		{
+			"_GLFW_COCOA"
+		}
+
+
 	filter "configurations:Debug"
 		runtime "Debug"
 		symbols "on"
@@ -217,3 +241,19 @@ project "Botapica"
 
 	filter "system:macosx"
 		defines "PLATFORM_MACOS"
+		links { 
+			"GLEW",  -- System GLEW library
+			"OpenGL.framework",
+			"Cocoa.framework",
+			"IOKit.framework",
+			"CoreVideo.framework",
+			"CoreFoundation.framework",
+			"Foundation.framework",
+			"QuartzCore.framework"
+		}
+		libdirs { "/opt/homebrew/lib" }  -- Homebrew library path
+		includedirs { "/opt/homebrew/include" }  -- Homebrew include path
+
+	filter { "system:macosx", "configurations:Debug" }
+		buildoptions { "-fsanitize=address" }
+		linkoptions { "-fsanitize=address" }
