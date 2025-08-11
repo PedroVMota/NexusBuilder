@@ -1,4 +1,5 @@
 #include "main.hpp"
+#include "Editors.h"
 
 void LogGPUInfo()
 {
@@ -17,10 +18,6 @@ void LogGPUInfo()
 
 void SetupGLFWHints()
 {
-	
-
-
-
 #ifdef PLATFORM_MACOS
 	BOTAPICA_LOG_INFO("Setting up GLFW hints for macOS...");
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -93,6 +90,8 @@ int main()
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init("#version 330");
 
+
+	Editor editor;
 	// Main loop
 	while (!glfwWindowShouldClose(window))
 	{
@@ -106,10 +105,7 @@ int main()
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 
-		ImGui::ShowDemoWindow();
-		ImGui::Begin("TEST IMGUI WINDOW");
-		ImGui::Text("test text");
-		ImGui::End();
+		editor.Render();
 
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

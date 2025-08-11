@@ -188,6 +188,7 @@ project "Botapica"
 	{
 		"Source/**.h",
 		"Source/**.cpp",
+		"Source/**/*.cpp",
 		"Include/**.h"
 	}
 
