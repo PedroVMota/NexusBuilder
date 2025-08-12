@@ -1,6 +1,10 @@
 #pragma once
 
 #include "main.h"
+#include "Object.h"
+
+#define NEAR 0.1f
+#define FAR 1000.0f
 
 class Camera {
 private:
@@ -12,7 +16,6 @@ private:
 		UP,
 		DOWN
 	};
-
 private:
 	//* Attributes
 	Vec3 position;
@@ -30,6 +33,7 @@ private:
 	//* Euler angles
 	float yaw;
 	float pitch;
+	float roll;
 
 	//* Constraints
 	static constexpr float YAW = -90.0f;
@@ -39,13 +43,13 @@ private:
 	static constexpr float ZOOM = 45.0f;
 
 public:
-	Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f),
-		   glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f),
+	Camera(Vec3 position = Vec3(0.0f, 0.0f, 0.0f),
+		   Vec3 up = Vec3(0.0f, 1.0f, 0.0f),
 		   float yaw = YAW, float pitch = PITCH);
 
 	Camera(float posX, float posY, float posZ, float upX, float upY, float upZ,
 			float yaw, float pitch);
-	~Camera();
+	~Camera() = default;
 
 	Mat4 GetViewMatrix() const;
 	Mat4 GetProjectionMatrix() const;
@@ -56,13 +60,22 @@ public:
 	void ProcessMouseScroll(float yOffset);
 
 	//* Getters
-	Vec3 GetPosition();
-	Vec3 GetFront();
-	Vec3 GetUp();
-	Vec3 GetRight();
-	float GetZoom();
-	float GetAspectRatio();
+	Vec3 GetPosition() const { return position; }
+	Vec3 GetFront() const { return front; }
+	Vec3 GetUp() const { return up; }
+	Vec3 GetRight() const { return right; }
+	float GetZoom() const { return zoom; }
+	float GetAspectRatio() const { return aspectRatio; }
 
 	//* Setters
+	void SetPosition(const Vec3 &pos) { position = pos; }
+	void SetAspectRatio(float ratio) { aspectRatio = ratio; }
 
+	//* Camera Controls
+	void OrbitAround(const Vec3 &target, float xOffset, float yOffset);
+	void LookAt(const Vec3 &target);
+	void FrameAll(const Vec3 &center, float radius);
+
+private:
+	void updateCameraVectors();
 };
