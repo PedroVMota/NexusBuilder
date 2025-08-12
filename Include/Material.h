@@ -33,7 +33,7 @@ public:
 	void SetSpecular(const glm::vec3& color) { specular = color; }
 	void SetShininess(float shine) { shininess = shine; }
 
-	// Texture paths (for later)
+	// TODO Texture paths (for later)
 	const String &GetDiffuseTexturePath() const { return diffuseTexturePath; }
 	const String &GetNormalTexturePath() const { return normalTexturePath; }
 	const String &GetSpecularTexturePath() const { return specularTexturePath; }
