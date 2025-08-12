@@ -1,8 +1,51 @@
+<<<<<<< HEAD
 #include "main.h"
 #include "Editors.h"
 
 void LogGPUInfo();
 void SetupGLFWHints();
+=======
+#include "Core.h"
+
+void LogGPUInfo()
+{
+	BOTAPICA_LOG_INFO(String("OpenGL Version: ") + reinterpret_cast<const char*>(glGetString(GL_VERSION)));
+	BOTAPICA_LOG_INFO(String("GPU: ") + reinterpret_cast<const char*>(glGetString(GL_RENDERER)));
+	BOTAPICA_LOG_INFO(String("OpenGL Vendor: ") + reinterpret_cast<const char*>(glGetString(GL_VENDOR)));
+
+	String renderer = reinterpret_cast<const char*>(glGetString(GL_RENDERER));
+	if (renderer.find("llvmpipe") != std::string::npos) 
+		BOTAPICA_LOG_INFO("Using software rendering (llvmpipe). GPU acceleration not available.");
+	else if (renderer.find("NVIDIA") != std::string::npos)
+		BOTAPICA_LOG_INFO("NVIDIA GPU acceleration detected!");
+	else
+		BOTAPICA_LOG_INFO("Hardware-accelerated rendering detected.");
+}
+
+void SetupGLFWHints()
+{
+<<<<<<< Updated upstream
+=======
+#ifdef PLATFORM_MACOS
+	BOTAPICA_LOG_INFO("Setting up GLFW hints for macOS...");
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+#else
+	BOTAPICA_LOG_INFO("Setting up GLFW hints for Windows/Linux...");
+>>>>>>> Stashed changes
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+	glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_TRUE);
+	glfwWindowHint(GLFW_DEPTH_BITS, 24);
+	glfwWindowHint(GLFW_STENCIL_BITS, 8);
+
+#ifdef BOTAPICA_DEBUG
+	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
+#endif
+}
+>>>>>>> origin/object_mesh
 
 int main()
 {
@@ -47,17 +90,27 @@ int main()
 
 	BOTAPICA_LOG_INFO("Engine initialized successfully");
 
+	// Example object creation
+	GameObject* testObj1 = GameObject::CreateGameObject("TestObject1", Vec3(1.0f, 2.0f, 3.0f));
+	GameObject* testObj2 = GameObject::CreateGameObject("TestObject2");
+	Object* baseObj = new Object("BaseObject");
+	
+	ObjectManager::LogObjectStats();
 
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
-	ImGuiIO &io = ImGui::GetIO(); (void)io;
+	ImGuiIO &io = ImGui::GetIO();
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	ImGui::StyleColorsDark();
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init("#version 330");
 
 
+<<<<<<< HEAD
 	Editor editor;
+=======
+	Mesh triangle = Mesh::CreateTriangle();
+>>>>>>> origin/object_mesh
 	// Main loop
 	while (!glfwWindowShouldClose(window))
 	{
@@ -65,7 +118,19 @@ int main()
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
+<<<<<<< HEAD
 		editor.Render(); // MAIN EDITOR -- DO NOT DELETE THIS LINE OR THE EDITOR BREAKS
+=======
+
+		ImGui::ShowDemoWindow();
+		ImGui::Begin("TEST IMGUI WINDOW");
+		ImGui::Text("test text");
+		ImGui::End();
+
+		// Draw mesh before ImGui to avoid state conflicts
+		triangle.draw();
+		
+>>>>>>> origin/object_mesh
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 		glfwSwapBuffers(window);
@@ -74,6 +139,10 @@ int main()
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
 	ImGui::DestroyContext();
+
+	// Cleanup object system
+	ObjectManager::ProcessDestroyQueue();
+	ObjectManager::DestroyAllObjects();
 
 	glfwDestroyWindow(window);
 	glfwTerminate();
