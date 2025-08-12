@@ -28,6 +28,9 @@ public:
     const char *getFragCode() const;
     const char *getVertCode() const;
     const GLuint& getShaderProgram() const;
+
+
+    static const char* loadShader(char *_file);
 };
 
 // TODO: Add uniform feature.

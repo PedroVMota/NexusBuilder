@@ -1,5 +1,4 @@
 #include "main.h"
-
 #include "Shader.h"
 
 void Editor::BeginDockspace()
@@ -470,29 +469,7 @@ void Viewport::Render()
 			GLuint shaderProgram;
 			GLuint VAO;
 			// Vertex shader source
-			const char* vertexShaderSource = R"(
-#version 330 core
-layout (location = 0) in vec3 aPos;
-layout (location = 1) in vec3 aColor;
-
-out vec3 vertexColor; // Pass color to fragment shader
-
-void main() {
-    gl_Position = vec4(aPos, 1.0);
-    vertexColor = aColor;
-}
-)";
-
-			// Updated fragment shader to use interpolated colors
-			const char* fragmentShaderSource = R"(
-#version 330 core
-in vec3 vertexColor; // Receive interpolated color from vertex shader
-out vec4 FragColor;
-
-void main() {
-    FragColor = vec4(vertexColor, 1.0);
-}
-)";
+			
 
 			// Vertices with position (x,y,z) and color (r,g,b) for each vertex
 			float vertices[] = {
@@ -518,14 +495,23 @@ void main() {
 			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 			glEnableVertexAttribArray(1);
 
+			const char* frag = Shader::loadShader("Shaders/debug.frag");
+			const char* vert = Shader::loadShader("Shaders/debug.vert");
+			if (!frag || !vert) {
+				BOTAPICA_LOG_ERROR("Something went wrong loading the shader");
+			}
+			else {
+				Shader shader = Shader(frag, vert);
+				glUseProgram(shader.getShaderProgram());
+			}
+			delete frag;
+			delete vert;
 
 
-			Shader shader = Shader(fragmentShaderSource, vertexShaderSource);
 
 
-			std::cout << "Shader ID: " << shader.getShaderProgram() << std::endl;
+
 			// Render triangle
-			glUseProgram(shader.getShaderProgram());
 			glBindVertexArray(VAO);
 			glDrawArrays(GL_TRIANGLES, 0, 3);  // THIS WAS MISSING!
 			glBindVertexArray(0);
@@ -551,14 +537,16 @@ void main() {
 				ImVec2(0, 1), // UV coordinates flipped
 				ImVec2(1, 0)
 			);
+
+			glDeleteBuffers(1, &VBO);
+			glDeleteVertexArrays(1, &VAO);
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+			glBindVertexArray(0);
 		}
 		else
 		{
 			ImGui::Text("Framebuffer error - cannot render viewport");
 		}
-
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindVertexArray(0);
 	}
 	else
 	{

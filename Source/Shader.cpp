@@ -117,7 +117,6 @@ void Shader::compile() {
         BOTAPICA_LOG_ERROR("Shader linking failed: " + std::string(infoLog));
         exit(EXIT_FAILURE);
     }
-    BOTAPICA_LOG_INFO("Shader compiled successfully.");
 }
 
 
@@ -127,4 +126,22 @@ Shader::~Shader() {
 	if (p_vertexShader != -1) glDeleteShader(p_vertexShader);
 	if (p_fragmentShader != -1) glDeleteShader(p_fragmentShader);
 	if (p_shaderProgram != -1) glDeleteProgram(p_shaderProgram);
+}
+
+
+const char* Shader::loadShader(char* _file) {
+    std::ifstream ifs(_file);
+    if (!ifs.is_open()) {
+        BOTAPICA_LOG_ERROR("Error opening the file");
+        return NULL;
+    }
+    std::string content;
+    std::string line;
+    while (std::getline(ifs, line)) {
+        content += line + "\n";  // Your original loop only kept the last line
+    }
+    // Allocate memory that persists after function returns
+    char* result = new char[content.length() + 1];
+    std::strcpy(result, content.c_str());
+    return result;
 }

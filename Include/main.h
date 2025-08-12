@@ -1,6 +1,10 @@
 #pragma once
 
 // Configuration macros
+
+#define _GNU_SOURCE
+
+
 #ifdef DEBUG
 	#define BOTAPICA_DEBUG
 	#define BOTAPICA_ENABLE_ASSERTS
