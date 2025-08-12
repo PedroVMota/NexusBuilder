@@ -8,6 +8,14 @@
 	#define BOTAPICA_RELEASE
 #endif
 
+// Add LogLevel enum
+enum class LogLevel {
+	INFO,
+	WARNING,
+	ERROR,
+	DEBUG_LEVEL
+};
+
 // Utility macros
 #define BOTAPICA_EXPAND_MACRO(x) x
 #define BOTAPICA_STRINGIFY_MACRO(x) #x
@@ -37,8 +45,8 @@
 #define BOTAPICA_RAD_TO_DEG (180.0f / BOTAPICA_PI)
 
 //Window Macros
-#define WIDHT 1280
-#define HEIGHT 720
+#define WIDHT 1920
+#define HEIGHT 1080
 
 // OpenGL and GLEW (must be included before GLFW)
 #include <GL/glew.h>
@@ -50,6 +58,7 @@
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
+#include "Editors.h"
 
 // GLM for mathematics
 #include <glm/glm.hpp>

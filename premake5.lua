@@ -185,12 +185,13 @@ project "Botapica"
         objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
         targetname "Botapica"
 
-        files
-        {
-                "Source/**.h",
-                "Source/**.cpp",
-                "Include/**.h"
-        }
+	files
+	{
+		"Source/**.h",
+		"Source/**.cpp",
+                "Source/**/*.cpp",
+		"Include/**.h"
+	}
 
         includedirs
         {
