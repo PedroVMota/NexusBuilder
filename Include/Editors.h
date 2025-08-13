@@ -1,6 +1,7 @@
 #pragma once
+
 #include "imgui.h"
-#include "main.hpp"
+#include "main.h"
 #include <filesystem>
 #include <vector>
 #include <string>
