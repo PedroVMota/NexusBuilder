@@ -190,7 +190,8 @@ project "Botapica"
 		"Source/**.h",
 		"Source/**.cpp",
                 "Source/**/*.cpp",
-		"Include/**.h"
+		"Include/**.h",
+                "Shaders/**"
 	}
 
         includedirs
@@ -199,7 +200,8 @@ project "Botapica"
                 "lib/glfw/include",
                 "lib/imgui",
                 "lib/imgui/backends",
-                "lib/glm"
+                "lib/glm",
+                "Shaders"
         }
 
         links
