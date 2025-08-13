@@ -1,5 +1,21 @@
 #include "main.h"
 #include "Shader.h"
+#include "Mesh.h"
+#include "Scene.h"
+#include <chrono>
+
+// Global logging function pointer definition
+void (*g_consoleLogFunc)(const char* level, const char* message) = nullptr;
+
+// Static member definition
+Console* Editor::s_console = nullptr;
+
+// Console logging wrapper function
+void ConsoleLogWrapper(const char* level, const char* message) {
+	if (Editor::GetConsole()) {
+		Editor::GetConsole()->AddLog("[%s] %s", level, message);
+	}
+}
 
 void Editor::BeginDockspace()
 {
@@ -126,6 +142,13 @@ void Editor::EndDockspace()
 void Editor::Render()
 {
 	static FileExplorer fileExplorer;
+	
+	// Set up global console access on first run
+	if (s_console == nullptr) {
+		s_console = &m_console;
+		g_consoleLogFunc = ConsoleLogWrapper;  // Set global logging function
+	}
+	
 	BeginDockspace();
 	
 	if (m_showFileExplorer)
@@ -192,7 +215,7 @@ void FileExplorer::SetCurrentPath(const String &path)
 			return;
 		}
 
-		BOTAPICA_LOG_INFO("Successfully navigating to: " + path);
+		//BOTAPICA_LOG_INFO("Successfully navigating to: " + path);
 		m_currPath = std::filesystem::path(path);
 		RefreshDirectory();
 	}
@@ -234,7 +257,7 @@ void FileExplorer::RefreshDirectory()
 			try
 			{
 				std::string filename = entry.path().filename().string();
-				BOTAPICA_LOG_INFO("Processing entry: " + filename);
+				//BOTAPICA_LOG_INFO("Processing entry: " + filename);
 				
 				if (!m_showHiddenFiles && !filename.empty() && filename[0] == '.')
 					continue;
@@ -243,12 +266,12 @@ void FileExplorer::RefreshDirectory()
 				if (entry.is_directory(entry_ec) && !entry_ec)
 				{
 					m_currDirectory.push_back(entry);
-					BOTAPICA_LOG_INFO("Added directory: " + filename);
+					//BOTAPICA_LOG_INFO("Added directory: " + filename);
 				}
 				else if (entry.is_regular_file(entry_ec) && !entry_ec)
 				{
 					m_currFiles.push_back(entry);
-					BOTAPICA_LOG_INFO("Added file: " + filename);
+					//BOTAPICA_LOG_INFO("Added file: " + filename);
 				}
 			}
 			catch (const std::exception& e)
@@ -280,7 +303,7 @@ void FileExplorer::RefreshDirectory()
 				}
 			});
 			
-		BOTAPICA_LOG_INFO("Refreshed directory: " + std::to_string(m_currDirectory.size()) + " dirs, " + std::to_string(m_currFiles.size()) + " files");
+		//BOTAPICA_LOG_INFO("Refreshed directory: " + std::to_string(m_currDirectory.size()) + " dirs, " + std::to_string(m_currFiles.size()) + " files");
 	}
 	catch(const std::filesystem::filesystem_error& e)
 	{
@@ -357,6 +380,7 @@ void FileExplorer::RenderFileList()
 Viewport::Viewport()
 {
 	CreateFramebuffer();
+	InitializeScene();
 }
 
 Viewport::~Viewport()
@@ -426,6 +450,49 @@ void Viewport::DeleteFramebuffer()
 	m_framebufferValid = false;
 }
 
+void Viewport::InitializeScene()
+{
+	// Create the scene
+	m_scene = std::make_unique<Scene>();
+	
+	// Setup the camera with proper aspect ratio and better positioning
+	Camera* camera = m_scene->GetCamera();
+	if (camera) {
+		camera->SetAspectRatio(static_cast<float>(m_width) / static_cast<float>(m_height));
+		camera->SetPosition(Vec3(0.0f, 1.0f, 3.0f)); // Move camera back and up
+		BOTAPICA_LOG_INFO("Camera positioned at (0, 1, 3)");
+	}
+	
+	// Create objects using simplified methods and then apply materials
+	GameObject* cube = m_scene->CreateCubeSimple("DemoCube", Vec3(0.0f, 0.0f, 0.0f), 1.0f);
+	m_scene->SetObjectMaterialColor(cube, Vec3(1.0f, 0.3f, 0.3f)); // Red
+	BOTAPICA_LOG_INFO("Created red cube at origin");
+	
+	GameObject* sphere = m_scene->CreateSphereSimple("DemoSphere", Vec3(2.5f, 0.0f, 0.0f), 0.8f);
+	m_scene->SetObjectMaterialToMetal(sphere);
+	m_scene->SetObjectMaterialColor(sphere, Vec3(0.3f, 1.0f, 0.3f)); // Green metal
+	BOTAPICA_LOG_INFO("Created green metal sphere at (2.5, 0, 0)");
+	
+	GameObject* plane = m_scene->CreatePlaneSimple("DemoPlane", Vec3(0.0f, -1.5f, 0.0f), 8.0f, 8.0f);
+	m_scene->SetObjectMaterialToPlastic(plane);
+	m_scene->SetObjectMaterialColor(plane, Vec3(0.3f, 0.3f, 1.0f)); // Blue plastic
+	BOTAPICA_LOG_INFO("Created blue plastic plane at (0, -1.5, 0)");
+	
+	// Create a second cube with glass material
+	GameObject* glassCube = m_scene->CreateCubeSimple("GlassCube", Vec3(-2.0f, 1.0f, 0.0f), 0.8f);
+	m_scene->SetObjectMaterialToGlass(glassCube);
+	BOTAPICA_LOG_INFO("Created glass cube at (-2, 1, 0)");
+	
+	// Create bright lighting
+	Light* dirLight = m_scene->CreateDirectionalLight("MainLight", Vec3(-0.3f, -1.0f, -0.3f));
+	dirLight->SetColor(Vec3(1.0f, 1.0f, 1.0f));
+	dirLight->SetIntensity(1.2f); // Brighter
+	BOTAPICA_LOG_INFO("Created bright directional light");
+	
+	BOTAPICA_LOG_INFO("Scene initialized with " + std::to_string(m_scene->GetRenderableCount()) + " renderable objects and " + std::to_string(m_scene->GetLightCount()) + " lights");
+	BOTAPICA_LOG_INFO("All objects have materials - demonstrating automatic material assignment");
+}
+
 void Viewport::Resize(int width, int height)
 {
 	if (width <= 0 || height <= 0) return;
@@ -435,13 +502,16 @@ void Viewport::Resize(int width, int height)
 		m_width = width;
 		m_height = height;
 		CreateFramebuffer();
+		
+		// Update camera aspect ratio
+		if (m_scene && m_scene->GetCamera()) {
+			m_scene->GetCamera()->SetAspectRatio(static_cast<float>(width) / static_cast<float>(height));
+		}
 	}
 }
 
 void Viewport::Render()
 {
-
-
 	ImGui::Begin("Viewport");
 	
 	// Get available content region
@@ -452,104 +522,136 @@ void Viewport::Render()
 	{
 		Resize(static_cast<int>(contentRegion.x), static_cast<int>(contentRegion.y));
 		
-		if (m_framebufferValid)
+		if (m_framebufferValid && m_scene)
 		{
+			// Handle camera input when viewport is focused
+			bool viewportHovered = ImGui::IsWindowHovered();
+			bool viewportFocused = ImGui::IsWindowFocused();
+			Camera* camera = m_scene->GetCamera();
+			
+			if (camera && viewportHovered) {
+				ImGuiIO& io = ImGui::GetIO();
+
+				// Mouse controls - only when right mouse button is held down
+				static bool wasRightMouseDown = false;
+				bool isRightMouseDown = ImGui::IsMouseDown(ImGuiMouseButton_Right);
+				
+				if (isRightMouseDown) {
+					if (wasRightMouseDown) {
+						// Continue dragging - apply mouse movement
+						Vec2 mouseDelta = Vec2(io.MouseDelta.x, io.MouseDelta.y);
+						if (glm::length(mouseDelta) > 0.0f) {
+							// Log camera rotation before movement
+							Vec3 currentPos = camera->GetPosition();
+							Vec3 currentFront = camera->GetFront();
+							float currentYaw = camera->GetYaw();
+							float currentPitch = camera->GetPitch();
+							
+							BOTAPICA_LOG_TRACE("Mouse delta: (" + std::to_string(mouseDelta.x) + ", " + std::to_string(mouseDelta.y) + ")");
+							BOTAPICA_LOG_TRACE("Camera BEFORE - Pos: (" + std::to_string(currentPos.x) + ", " + std::to_string(currentPos.y) + ", " + std::to_string(currentPos.z) + ")");
+							BOTAPICA_LOG_TRACE("Camera BEFORE - Yaw: " + std::to_string(currentYaw) + ", Pitch: " + std::to_string(currentPitch));
+							BOTAPICA_LOG_TRACE("Camera BEFORE - Front: (" + std::to_string(currentFront.x) + ", " + std::to_string(currentFront.y) + ", " + std::to_string(currentFront.z) + ")");
+							
+							// Apply mouse movement for camera rotation
+							camera->ProcessMouseMovement(mouseDelta.x * 0.05f, -mouseDelta.y * 0.05f);
+							
+							// Log camera rotation after movement
+							Vec3 newPos = camera->GetPosition();
+							Vec3 newFront = camera->GetFront();
+							float newYaw = camera->GetYaw();
+							float newPitch = camera->GetPitch();
+							
+							BOTAPICA_LOG_TRACE("Camera AFTER - Pos: (" + std::to_string(newPos.x) + ", " + std::to_string(newPos.y) + ", " + std::to_string(newPos.z) + ")");
+							BOTAPICA_LOG_TRACE("Camera AFTER - Yaw: " + std::to_string(newYaw) + ", Pitch: " + std::to_string(newPitch));
+							BOTAPICA_LOG_TRACE("Camera AFTER - Front: (" + std::to_string(newFront.x) + ", " + std::to_string(newFront.y) + ", " + std::to_string(newFront.z) + ")");
+						}
+					} else {
+						BOTAPICA_LOG_TRACE("Right mouse started - first frame");
+					}
+					// Update state for next frame
+					wasRightMouseDown = true;
+				} else {
+					if (wasRightMouseDown) {
+						BOTAPICA_LOG_TRACE("Right mouse released");
+					}
+					// Right mouse is not held down
+					wasRightMouseDown = false;
+				}
+				// Scroll wheel for zoom
+				if (io.MouseWheel != 0.0f) {
+					camera->ProcessMouseScroll(io.MouseWheel);
+				}
+				// Keyboard controls (WASDQE) - when viewport is focused or right mouse is held
+				float deltaTime = ImGui::GetIO().DeltaTime;
+				if (viewportFocused || isRightMouseDown) {
+					if (ImGui::IsKeyDown(ImGuiKey_W)) {
+						camera->ProcessKeyboard(Camera::Movement::FORWARD, deltaTime);
+					}
+					if (ImGui::IsKeyDown(ImGuiKey_S)) {
+						camera->ProcessKeyboard(Camera::Movement::BACKWARD, deltaTime);
+					}
+					if (ImGui::IsKeyDown(ImGuiKey_A)) {
+						camera->ProcessKeyboard(Camera::Movement::LEFT, deltaTime);
+					}
+					if (ImGui::IsKeyDown(ImGuiKey_D)) {
+						camera->ProcessKeyboard(Camera::Movement::RIGHT, deltaTime);
+					}
+					if (ImGui::IsKeyDown(ImGuiKey_Q)) {
+						camera->ProcessKeyboard(Camera::Movement::DOWN, deltaTime);
+					}
+					if (ImGui::IsKeyDown(ImGuiKey_E)) {
+						camera->ProcessKeyboard(Camera::Movement::UP, deltaTime);
+					}
+					// Reset camera position with R key
+					if (ImGui::IsKeyPressed(ImGuiKey_R)) {
+						camera->SetPosition(Vec3(0.0f, 1.0f, 3.0f));
+						BOTAPICA_LOG_INFO("Camera position reset to (0, 1, 3)");
+					}
+					// Frame all objects with F key
+					if (ImGui::IsKeyPressed(ImGuiKey_F)) {
+						m_scene->FrameAll();
+						BOTAPICA_LOG_INFO("Camera framed all objects");
+					}
+				}
+			}
 			// Bind our framebuffer for rendering
 			glBindFramebuffer(GL_FRAMEBUFFER, m_framebuffer);
 			glViewport(0, 0, m_width, m_height);
 			
-			// Clear the framebuffer
-			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-
-
-			// TODO: Render 3D scene here
-
-			GLuint shaderProgram;
-			GLuint VAO;
-			// Vertex shader source
+			// Update scene
+			static auto lastTime = std::chrono::high_resolution_clock::now();
+			auto currentTime = std::chrono::high_resolution_clock::now();
+			float deltaTime = std::chrono::duration<float>(currentTime - lastTime).count();
+			lastTime = currentTime;
 			
-
-			// Vertices with position (x,y,z) and color (r,g,b) for each vertex
-			float vertices[] = {
-				// Position        // Color
-				-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, // Bottom left - Red
-				 0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, // Bottom right - Green  
-				 0.0f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f  // Top - Blue
-			};
-
-			// Generate and bind buffers
-			GLuint VBO;
-			glGenVertexArrays(1, &VAO);
-			glGenBuffers(1, &VBO);
-
-			glBindVertexArray(VAO);
-			glBindBuffer(GL_ARRAY_BUFFER, VBO);
-			glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-			// Set vertex attributes
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-			glEnableVertexAttribArray(0);
-
-			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-			glEnableVertexAttribArray(1);
-
-			const char* frag = Shader::loadShader("Shaders/debug.frag");
-			const char* vert = Shader::loadShader("Shaders/debug.vert");
-			if (!frag || !vert) {
-				BOTAPICA_LOG_ERROR("Something went wrong loading the shader");
-			}
-			else {
-				Shader shader = Shader(frag, vert);
-				glUseProgram(shader.getShaderProgram());
-			}
-			delete frag;
-			delete vert;
-
-
-
-
-
-			// Render triangle
-			glBindVertexArray(VAO);
-			glDrawArrays(GL_TRIANGLES, 0, 3);  // THIS WAS MISSING!
-			glBindVertexArray(0);
-			// Unbind
-   
-
-
-
-
-
-
-
+			m_scene->Update(deltaTime);
 			
-			
-			
-			
-			static Mesh triangle = Mesh::CreateTriangle();
-			triangle.draw();
+			// Render the scene
+			m_scene->Draw();
 			
 			// Unbind framebuffer (back to default)
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 			
 			// Display the rendered texture in ImGui
+			ImVec2 cursorPos = ImGui::GetCursorScreenPos();
 			ImGui::Image(
 				reinterpret_cast<void*>(static_cast<intptr_t>(m_colorTexture)),
 				contentRegion,
 				ImVec2(0, 1), // UV coordinates flipped
 				ImVec2(1, 0)
 			);
-
-			glDeleteBuffers(1, &VBO);
-			glDeleteVertexArrays(1, &VAO);
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
-			glBindVertexArray(0);
+			
+			// Add invisible button for input handling
+			ImGui::SetCursorScreenPos(cursorPos);
+			ImGui::InvisibleButton("viewport_button", contentRegion);
 		}
 		else
 		{
-			ImGui::Text("Framebuffer error - cannot render viewport");
+			if (!m_framebufferValid) {
+				ImGui::Text("Framebuffer error - cannot render viewport");
+			} else {
+				ImGui::Text("Scene not initialized");
+			}
 		}
 	}
 	else
