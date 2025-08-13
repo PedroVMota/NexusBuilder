@@ -30,10 +30,10 @@ Mat4 Camera::GetProjectionMatrix() const {
 	return glm::perspective(glm::radians(zoom), aspectRatio, NEAR, FAR);
 }
 
-void Camera::ProcessKeyboard(Movement direcction, float deltaTime) {
+void Camera::ProcessKeyboard(Movement direction, float deltaTime) {
 	float velocity = moveSpeed * deltaTime;
 
-	switch (direcction)
+	switch (direction)
 	{
 	case Movement::FORWARD:
 		position += front * velocity;
@@ -128,6 +128,21 @@ void Camera::FrameAll(const Vec3 &center, float radius) {
 	LookAt(center);
 }
 
+void Camera::SetRotation(Vec3 rotation) {
+	yaw = rotation.x;
+	pitch = rotation.y;
+	roll = rotation.z;
+	
+	// Constrain pitch to prevent camera flipping
+	if (pitch > 89.0f)
+		pitch = 89.0f;
+	if (pitch < -89.0f)
+		pitch = -89.0f;
+	
+	// Update camera vectors based on new rotation
+	updateCameraVectors();
+}
+
 void Camera::updateCameraVectors() {
 	Vec3 newFront;
 	newFront.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
@@ -138,3 +153,4 @@ void Camera::updateCameraVectors() {
 	right = glm::normalize(glm::cross(front, worldUp));
 	up = glm::normalize(glm::cross(right, front));
 }
+

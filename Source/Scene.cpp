@@ -548,13 +548,18 @@ void Scene::RenderMeshes() {
 		MeshRenderer* renderer = pair.second.get();
 		
 		if (obj && renderer && obj->IsActive() && renderer->IsEnabled()) {
+			// Disable backface culling only if its a plane = 2d mesh should be visible from up and below
+			bool isPlane = (obj->GetName().find("Plane") != std::string::npos);
+			if (isPlane) {
+				glDisable(GL_CULL_FACE);
+			}
 			// Set model matrix
 			Mat4 modelMatrix = obj->GetTransformMatrix();
 			GLint modelLoc = glGetUniformLocation(m_shaderProgram, "model");
 			if (modelLoc != -1) {
 				glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelMatrix));
 			}
-			
+
 			// Set material properties
 			const Material& material = renderer->GetMesh().getMaterial();
 			SetMaterialUniforms(material);

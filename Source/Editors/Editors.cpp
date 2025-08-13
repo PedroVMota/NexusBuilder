@@ -460,6 +460,7 @@ void Viewport::InitializeScene()
 	if (camera) {
 		camera->SetAspectRatio(static_cast<float>(m_width) / static_cast<float>(m_height));
 		camera->SetPosition(Vec3(0.0f, 1.0f, 3.0f)); // Move camera back and up
+		camera->SetSensitivity(1.0f);
 		BOTAPICA_LOG_INFO("Camera positioned at (0, 1, 3)");
 	}
 	
@@ -547,10 +548,10 @@ void Viewport::Render()
 							float currentYaw = camera->GetYaw();
 							float currentPitch = camera->GetPitch();
 							
-							BOTAPICA_LOG_TRACE("Mouse delta: (" + std::to_string(mouseDelta.x) + ", " + std::to_string(mouseDelta.y) + ")");
+							/* BOTAPICA_LOG_TRACE("Mouse delta: (" + std::to_string(mouseDelta.x) + ", " + std::to_string(mouseDelta.y) + ")");
 							BOTAPICA_LOG_TRACE("Camera BEFORE - Pos: (" + std::to_string(currentPos.x) + ", " + std::to_string(currentPos.y) + ", " + std::to_string(currentPos.z) + ")");
 							BOTAPICA_LOG_TRACE("Camera BEFORE - Yaw: " + std::to_string(currentYaw) + ", Pitch: " + std::to_string(currentPitch));
-							BOTAPICA_LOG_TRACE("Camera BEFORE - Front: (" + std::to_string(currentFront.x) + ", " + std::to_string(currentFront.y) + ", " + std::to_string(currentFront.z) + ")");
+							BOTAPICA_LOG_TRACE("Camera BEFORE - Front: (" + std::to_string(currentFront.x) + ", " + std::to_string(currentFront.y) + ", " + std::to_string(currentFront.z) + ")"); */
 							
 							// Apply mouse movement for camera rotation
 							camera->ProcessMouseMovement(mouseDelta.x * 0.05f, -mouseDelta.y * 0.05f);
@@ -561,9 +562,9 @@ void Viewport::Render()
 							float newYaw = camera->GetYaw();
 							float newPitch = camera->GetPitch();
 							
-							BOTAPICA_LOG_TRACE("Camera AFTER - Pos: (" + std::to_string(newPos.x) + ", " + std::to_string(newPos.y) + ", " + std::to_string(newPos.z) + ")");
+							/* BOTAPICA_LOG_TRACE("Camera AFTER - Pos: (" + std::to_string(newPos.x) + ", " + std::to_string(newPos.y) + ", " + std::to_string(newPos.z) + ")");
 							BOTAPICA_LOG_TRACE("Camera AFTER - Yaw: " + std::to_string(newYaw) + ", Pitch: " + std::to_string(newPitch));
-							BOTAPICA_LOG_TRACE("Camera AFTER - Front: (" + std::to_string(newFront.x) + ", " + std::to_string(newFront.y) + ", " + std::to_string(newFront.z) + ")");
+							BOTAPICA_LOG_TRACE("Camera AFTER - Front: (" + std::to_string(newFront.x) + ", " + std::to_string(newFront.y) + ", " + std::to_string(newFront.z) + ")"); */
 						}
 					} else {
 						BOTAPICA_LOG_TRACE("Right mouse started - first frame");
@@ -606,6 +607,10 @@ void Viewport::Render()
 					if (ImGui::IsKeyPressed(ImGuiKey_R)) {
 						camera->SetPosition(Vec3(0.0f, 1.0f, 3.0f));
 						BOTAPICA_LOG_INFO("Camera position reset to (0, 1, 3)");
+					}
+					// Reset rotation with G key
+					if (ImGui::IsKeyPressed(ImGuiKey_G)) {
+						camera->SetRotation(Vec3(-90.0f, 0.0f, 0.0f));
 					}
 					// Frame all objects with F key
 					if (ImGui::IsKeyPressed(ImGuiKey_F)) {

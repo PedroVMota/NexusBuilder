@@ -39,7 +39,7 @@ private:
 	//* Constraints
 	static constexpr float YAW = -90.0f;
 	static constexpr float PITCH = 0.0f;
-	static constexpr float SPEED = 2.6f;
+	static constexpr float SPEED = 4.0f;
 	static constexpr float SENSITIVITY = 0.5f;
 	static constexpr float ZOOM = 45.0f;
 
@@ -70,10 +70,13 @@ public:
 	float GetYaw() const { return yaw; }
 	float GetPitch() const { return pitch; }
 	float GetRoll() const { return roll; }
+	float GetSensitivity() { return mouseSensitivity;}
 
 	//* Setters
 	void SetPosition(const Vec3 &pos) { position = pos; }
 	void SetAspectRatio(float ratio) { aspectRatio = ratio; }
+	void SetSensitivity(float sens) { mouseSensitivity = sens; }
+	void SetRotation(Vec3 rotation);
 
 	//* Camera Controls
 	void OrbitAround(const Vec3 &target, float xOffset, float yOffset);
