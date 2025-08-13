@@ -527,6 +527,10 @@ void Viewport::Render()
 			
 			
 			
+			
+			static Mesh triangle = Mesh::CreateTriangle();
+			triangle.draw();
+			
 			// Unbind framebuffer (back to default)
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 			
