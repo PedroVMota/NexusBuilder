@@ -60,14 +60,14 @@ void Camera::ProcessMouseMovement(float xOffset, float yOffset, bool constrainPi
 	xOffset *= mouseSensitivity;
 	yOffset *= mouseSensitivity;
 	
-	yaw *= xOffset;
-	pitch *= yOffset;
+	yaw += xOffset;
+	pitch += yOffset;
 
 	if (constrainPitch) {
 		if (pitch > 89.0f)
-		pitch = 1.0f;
-		if	(pitch > -89.0f)
-		pitch = -89.0f;
+			pitch = 89.0f;
+		if (pitch < -89.0f)
+			pitch = -89.0f;
 	}
 	updateCameraVectors();
 }

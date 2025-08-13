@@ -1,9 +1,9 @@
 #pragma once
 
 // Configuration macros
-
-#define _GNU_SOURCE
-
+#ifndef _GNU_SOURCE
+	#define _GNU_SOURCE
+#endif
 
 #ifdef DEBUG
 	#define BOTAPICA_DEBUG
@@ -11,6 +11,11 @@
 #else
 	#define BOTAPICA_RELEASE
 #endif
+
+// Standard includes
+#include <iostream>
+#include <sstream>
+#include <string>
 
 // Add LogLevel enum
 enum class LogLevel {
@@ -34,12 +39,48 @@ enum class LogLevel {
 	#define BOTAPICA_CORE_ASSERT(x, ...)
 #endif
 
+// Global logging function pointer
+extern void (*g_consoleLogFunc)(const char* level, const char* message);
+
+// Helper function for console logging
+inline void LogToConsole(const char* level, const std::string& message) {
+	// First try to log to console if available
+	if (g_consoleLogFunc) {
+		g_consoleLogFunc(level, message.c_str());
+	}
+	// Also log to stdout/stderr as fallback
+	if (std::string(level) == "ERROR" || std::string(level) == "FATAL") {
+		std::cerr << "[" << level << "] " << message << std::endl;
+	} else {
+		std::cout << "[" << level << "] " << message << std::endl;
+	}
+}
+
 // Logging macros
-#define BOTAPICA_LOG_TRACE(...)    std::cout << "[TRACE] " << __VA_ARGS__ << std::endl
-#define BOTAPICA_LOG_INFO(...)     std::cout << "[INFO] " << __VA_ARGS__ << std::endl
-#define BOTAPICA_LOG_WARN(...)     std::cout << "[WARN] " << __VA_ARGS__ << std::endl
-#define BOTAPICA_LOG_ERROR(...)    std::cerr << "[ERROR] " << __VA_ARGS__ << std::endl
-#define BOTAPICA_LOG_FATAL(...)    std::cerr << "[FATAL] " << __VA_ARGS__ << std::endl
+#define BOTAPICA_LOG_TRACE(...)    do { \
+	std::stringstream ss; ss << __VA_ARGS__; \
+	LogToConsole("TRACE", ss.str()); \
+} while(0)
+
+#define BOTAPICA_LOG_INFO(...)     do { \
+	std::stringstream ss; ss << __VA_ARGS__; \
+	LogToConsole("INFO", ss.str()); \
+} while(0)
+
+#define BOTAPICA_LOG_WARN(...)     do { \
+	std::stringstream ss; ss << __VA_ARGS__; \
+	LogToConsole("WARN", ss.str()); \
+} while(0)
+
+#define BOTAPICA_LOG_ERROR(...)    do { \
+	std::stringstream ss; ss << __VA_ARGS__; \
+	LogToConsole("ERROR", ss.str()); \
+} while(0)
+
+#define BOTAPICA_LOG_FATAL(...)    do { \
+	std::stringstream ss; ss << __VA_ARGS__; \
+	LogToConsole("FATAL", ss.str()); \
+} while(0)
 
 // Math constants
 #define BOTAPICA_PI 3.14159265358979323846f

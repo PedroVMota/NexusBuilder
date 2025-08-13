@@ -7,7 +7,7 @@
 #define FAR 1000.0f
 
 class Camera {
-private:
+public:
 	enum class Movement {
 		FORWARD,
 		BACKWARD,
@@ -16,6 +16,7 @@ private:
 		UP,
 		DOWN
 	};
+	
 private:
 	//* Attributes
 	Vec3 position;
@@ -39,7 +40,7 @@ private:
 	static constexpr float YAW = -90.0f;
 	static constexpr float PITCH = 0.0f;
 	static constexpr float SPEED = 2.6f;
-	static constexpr float SENSITIVITY = 0.1f;
+	static constexpr float SENSITIVITY = 0.5f;
 	static constexpr float ZOOM = 45.0f;
 
 public:
@@ -66,6 +67,9 @@ public:
 	Vec3 GetRight() const { return right; }
 	float GetZoom() const { return zoom; }
 	float GetAspectRatio() const { return aspectRatio; }
+	float GetYaw() const { return yaw; }
+	float GetPitch() const { return pitch; }
+	float GetRoll() const { return roll; }
 
 	//* Setters
 	void SetPosition(const Vec3 &pos) { position = pos; }
