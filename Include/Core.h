@@ -7,5 +7,9 @@
 #include "ObjectManager.h"
 #include "GameObject.h"
 #include "Mesh.h"
+#include "Shader.h"
+#include "Primitives.h"
+#include "Material.h"
+#include "Light.h"
 
 #endif
