@@ -1,5 +1,4 @@
-#include "main.h"
-#include "Shader.h"
+#include "Core.h"
 
 void Editor::BeginDockspace()
 {
@@ -466,36 +465,36 @@ void Viewport::Render()
 
 			// TODO: Render 3D scene here
 
-			GLuint shaderProgram;
-			GLuint VAO;
-			// Vertex shader source
-			
+			//GLuint shaderProgram;
+			//GLuint VAO;
+			//// Vertex shader source
+			//
 
-			// Vertices with position (x,y,z) and color (r,g,b) for each vertex
-			float vertices[] = {
-				// Position        // Color
-				-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, // Bottom left - Red
-				 0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, // Bottom right - Green  
-				 0.0f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f  // Top - Blue
-			};
+			//// Vertices with position (x,y,z) and color (r,g,b) for each vertex
+			//float vertices[] = {
+			//	// Position        // Color
+			//	-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, // Bottom left - Red
+			//	 0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, // Bottom right - Green  
+			//	 0.0f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f  // Top - Blue
+			//};
 
-			// Generate and bind buffers
-			GLuint VBO;
-			glGenVertexArrays(1, &VAO);
-			glGenBuffers(1, &VBO);
+			//// Generate and bind buffers
+			//GLuint VBO;
+			//glGenVertexArrays(1, &VAO);
+			//glGenBuffers(1, &VBO);
 
-			glBindVertexArray(VAO);
-			glBindBuffer(GL_ARRAY_BUFFER, VBO);
-			glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+			//glBindVertexArray(VAO);
+			//glBindBuffer(GL_ARRAY_BUFFER, VBO);
+			//glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-			// Set vertex attributes
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-			glEnableVertexAttribArray(0);
+			//// Set vertex attributes
+			//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+			//glEnableVertexAttribArray(0);
 
-			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-			glEnableVertexAttribArray(1);
+			//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+			//glEnableVertexAttribArray(1);
 
-			const char* frag = Shader::loadShader("Shaders/debug.frag");
+			/*const char* frag = Shader::loadShader("Shaders/debug.frag");
 			const char* vert = Shader::loadShader("Shaders/debug.vert");
 			if (!frag || !vert) {
 				BOTAPICA_LOG_ERROR("Something went wrong loading the shader");
@@ -505,16 +504,16 @@ void Viewport::Render()
 				glUseProgram(shader.getShaderProgram());
 			}
 			delete frag;
-			delete vert;
+			delete vert;*/
 
 
 
 
 
 			// Render triangle
-			glBindVertexArray(VAO);
-			glDrawArrays(GL_TRIANGLES, 0, 3);  // THIS WAS MISSING!
-			glBindVertexArray(0);
+			//glBindVertexArray(VAO);
+			//glDrawArrays(GL_TRIANGLES, 0, 3);  // THIS WAS MISSING!
+			//glBindVertexArray(0);
 			// Unbind
    
 
@@ -528,7 +527,7 @@ void Viewport::Render()
 			
 			
 			
-			static Mesh triangle = Mesh::CreateTriangle();
+			static Mesh triangle = Primitives::createCube();
 			triangle.draw();
 			
 			// Unbind framebuffer (back to default)
@@ -542,10 +541,10 @@ void Viewport::Render()
 				ImVec2(1, 0)
 			);
 
-			glDeleteBuffers(1, &VBO);
+		/*	glDeleteBuffers(1, &VBO);
 			glDeleteVertexArrays(1, &VAO);
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
-			glBindVertexArray(0);
+			glBindVertexArray(0);*/
 		}
 		else
 		{
