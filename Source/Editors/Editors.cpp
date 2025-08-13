@@ -1,4 +1,21 @@
-#include "Core.h"
+#include "main.h"
+#include "Shader.h"
+#include "Mesh.h"
+#include "Scene.h"
+#include <chrono>
+
+// Global logging function pointer definition
+void (*g_consoleLogFunc)(const char* level, const char* message) = nullptr;
+
+// Static member definition
+Console* Editor::s_console = nullptr;
+
+// Console logging wrapper function
+void ConsoleLogWrapper(const char* level, const char* message) {
+	if (Editor::GetConsole()) {
+		Editor::GetConsole()->AddLog("[%s] %s", level, message);
+	}
+}
 
 void Editor::BeginDockspace()
 {
@@ -125,6 +142,13 @@ void Editor::EndDockspace()
 void Editor::Render()
 {
 	static FileExplorer fileExplorer;
+	
+	// Set up global console access on first run
+	if (s_console == nullptr) {
+		s_console = &m_console;
+		g_consoleLogFunc = ConsoleLogWrapper;  // Set global logging function
+	}
+	
 	BeginDockspace();
 	
 	if (m_showFileExplorer)
@@ -191,7 +215,7 @@ void FileExplorer::SetCurrentPath(const String &path)
 			return;
 		}
 
-		BOTAPICA_LOG_INFO("Successfully navigating to: " + path);
+		//BOTAPICA_LOG_INFO("Successfully navigating to: " + path);
 		m_currPath = std::filesystem::path(path);
 		RefreshDirectory();
 	}
@@ -233,7 +257,7 @@ void FileExplorer::RefreshDirectory()
 			try
 			{
 				std::string filename = entry.path().filename().string();
-				BOTAPICA_LOG_INFO("Processing entry: " + filename);
+				//BOTAPICA_LOG_INFO("Processing entry: " + filename);
 				
 				if (!m_showHiddenFiles && !filename.empty() && filename[0] == '.')
 					continue;
@@ -242,12 +266,12 @@ void FileExplorer::RefreshDirectory()
 				if (entry.is_directory(entry_ec) && !entry_ec)
 				{
 					m_currDirectory.push_back(entry);
-					BOTAPICA_LOG_INFO("Added directory: " + filename);
+					//BOTAPICA_LOG_INFO("Added directory: " + filename);
 				}
 				else if (entry.is_regular_file(entry_ec) && !entry_ec)
 				{
 					m_currFiles.push_back(entry);
-					BOTAPICA_LOG_INFO("Added file: " + filename);
+					//BOTAPICA_LOG_INFO("Added file: " + filename);
 				}
 			}
 			catch (const std::exception& e)
@@ -279,7 +303,7 @@ void FileExplorer::RefreshDirectory()
 				}
 			});
 			
-		BOTAPICA_LOG_INFO("Refreshed directory: " + std::to_string(m_currDirectory.size()) + " dirs, " + std::to_string(m_currFiles.size()) + " files");
+		//BOTAPICA_LOG_INFO("Refreshed directory: " + std::to_string(m_currDirectory.size()) + " dirs, " + std::to_string(m_currFiles.size()) + " files");
 	}
 	catch(const std::filesystem::filesystem_error& e)
 	{
@@ -356,6 +380,7 @@ void FileExplorer::RenderFileList()
 Viewport::Viewport()
 {
 	CreateFramebuffer();
+	InitializeScene();
 }
 
 Viewport::~Viewport()
@@ -425,6 +450,49 @@ void Viewport::DeleteFramebuffer()
 	m_framebufferValid = false;
 }
 
+void Viewport::InitializeScene()
+{
+	// Create the scene
+	m_scene = std::make_unique<Scene>();
+	
+	// Setup the camera with proper aspect ratio and better positioning
+	Camera* camera = m_scene->GetCamera();
+	if (camera) {
+		camera->SetAspectRatio(static_cast<float>(m_width) / static_cast<float>(m_height));
+		camera->SetPosition(Vec3(0.0f, 1.0f, 3.0f)); // Move camera back and up
+		BOTAPICA_LOG_INFO("Camera positioned at (0, 1, 3)");
+	}
+	
+	// Create objects using simplified methods and then apply materials
+	GameObject* cube = m_scene->CreateCubeSimple("DemoCube", Vec3(0.0f, 0.0f, 0.0f), 1.0f);
+	m_scene->SetObjectMaterialColor(cube, Vec3(1.0f, 0.3f, 0.3f)); // Red
+	BOTAPICA_LOG_INFO("Created red cube at origin");
+	
+	GameObject* sphere = m_scene->CreateSphereSimple("DemoSphere", Vec3(2.5f, 0.0f, 0.0f), 0.8f);
+	m_scene->SetObjectMaterialToMetal(sphere);
+	m_scene->SetObjectMaterialColor(sphere, Vec3(0.3f, 1.0f, 0.3f)); // Green metal
+	BOTAPICA_LOG_INFO("Created green metal sphere at (2.5, 0, 0)");
+	
+	GameObject* plane = m_scene->CreatePlaneSimple("DemoPlane", Vec3(0.0f, -1.5f, 0.0f), 8.0f, 8.0f);
+	m_scene->SetObjectMaterialToPlastic(plane);
+	m_scene->SetObjectMaterialColor(plane, Vec3(0.3f, 0.3f, 1.0f)); // Blue plastic
+	BOTAPICA_LOG_INFO("Created blue plastic plane at (0, -1.5, 0)");
+	
+	// Create a second cube with glass material
+	GameObject* glassCube = m_scene->CreateCubeSimple("GlassCube", Vec3(-2.0f, 1.0f, 0.0f), 0.8f);
+	m_scene->SetObjectMaterialToGlass(glassCube);
+	BOTAPICA_LOG_INFO("Created glass cube at (-2, 1, 0)");
+	
+	// Create bright lighting
+	Light* dirLight = m_scene->CreateDirectionalLight("MainLight", Vec3(-0.3f, -1.0f, -0.3f));
+	dirLight->SetColor(Vec3(1.0f, 1.0f, 1.0f));
+	dirLight->SetIntensity(1.2f); // Brighter
+	BOTAPICA_LOG_INFO("Created bright directional light");
+	
+	BOTAPICA_LOG_INFO("Scene initialized with " + std::to_string(m_scene->GetRenderableCount()) + " renderable objects and " + std::to_string(m_scene->GetLightCount()) + " lights");
+	BOTAPICA_LOG_INFO("All objects have materials - demonstrating automatic material assignment");
+}
+
 void Viewport::Resize(int width, int height)
 {
 	if (width <= 0 || height <= 0) return;
@@ -434,13 +502,16 @@ void Viewport::Resize(int width, int height)
 		m_width = width;
 		m_height = height;
 		CreateFramebuffer();
+		
+		// Update camera aspect ratio
+		if (m_scene && m_scene->GetCamera()) {
+			m_scene->GetCamera()->SetAspectRatio(static_cast<float>(width) / static_cast<float>(height));
+		}
 	}
 }
 
 void Viewport::Render()
 {
-
-
 	ImGui::Begin("Viewport");
 	
 	// Get available content region
@@ -451,16 +522,21 @@ void Viewport::Render()
 	{
 		Resize(static_cast<int>(contentRegion.x), static_cast<int>(contentRegion.y));
 		
-		if (m_framebufferValid)
+		if (m_framebufferValid && m_scene)
 		{
-			// Bind our framebuffer for rendering
-			glBindFramebuffer(GL_FRAMEBUFFER, m_framebuffer);
-			glViewport(0, 0, m_width, m_height);
+			// Handle camera input when viewport is focused
+			bool viewportHovered = ImGui::IsWindowHovered();
+			bool viewportFocused = ImGui::IsWindowFocused();
+			Camera* camera = m_scene->GetCamera();
 			
-			// Clear the framebuffer
-			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			if (camera && viewportHovered) {
+				ImGuiIO& io = ImGui::GetIO();
 
+			// Update scene
+			static auto lastTime = std::chrono::high_resolution_clock::now();
+			auto currentTime = std::chrono::high_resolution_clock::now();
+			float deltaTime = std::chrono::duration<float>(currentTime - lastTime).count();
+			lastTime = currentTime;
 
 
    
@@ -504,21 +580,25 @@ void Viewport::Render()
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 			
 			// Display the rendered texture in ImGui
+			ImVec2 cursorPos = ImGui::GetCursorScreenPos();
 			ImGui::Image(
 				reinterpret_cast<void*>(static_cast<intptr_t>(m_colorTexture)),
 				contentRegion,
 				ImVec2(0, 1), // UV coordinates flipped
 				ImVec2(1, 0)
 			);
-
-		/*	glDeleteBuffers(1, &VBO);
-			glDeleteVertexArrays(1, &VAO);
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
-			glBindVertexArray(0);*/
+			
+			// Add invisible button for input handling
+			ImGui::SetCursorScreenPos(cursorPos);
+			ImGui::InvisibleButton("viewport_button", contentRegion);
 		}
 		else
 		{
-			ImGui::Text("Framebuffer error - cannot render viewport");
+			if (!m_framebufferValid) {
+				ImGui::Text("Framebuffer error - cannot render viewport");
+			} else {
+				ImGui::Text("Scene not initialized");
+			}
 		}
 	}
 	else

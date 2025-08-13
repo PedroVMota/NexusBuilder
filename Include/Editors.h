@@ -6,11 +6,13 @@
 #include <vector>
 #include <string>
 #include <mutex>
+#include <memory>
 
 using String = std::string;
 
 // Forward declarations
 class Console;
+class Scene;
 
 class Viewport {
 public:
@@ -20,9 +22,13 @@ public:
 	void Resize(int width, int height);
 	unsigned int GetFramebufferTexture() const { return m_colorTexture; }
 	
+	// Scene access
+	Scene* GetScene() const { return m_scene.get(); }
+	
 private:
 	void CreateFramebuffer();
 	void DeleteFramebuffer();
+	void InitializeScene();
 	
 	unsigned int m_framebuffer = 0;
 	unsigned int m_colorTexture = 0;
@@ -30,6 +36,9 @@ private:
 	int m_width = 800;
 	int m_height = 600;
 	bool m_framebufferValid = false;
+	
+	// Scene for 3D rendering
+	std::unique_ptr<Scene> m_scene;
 };
 
 class Console {
@@ -68,6 +77,10 @@ public:
 	void Render();
 	void RenderMenuBar();
 	
+	// Global console access
+	static Console* GetConsole() { return s_console; }
+	static void SetConsole(Console* console) { s_console = console; }
+	
 private:
 	bool m_dockspaceOpen = true;
 	Viewport m_viewport;
@@ -75,6 +88,8 @@ private:
 	bool m_showFileExplorer = true;
 	bool m_showConsole = true;
 	bool m_showViewport = true;
+	
+	static Console* s_console;
 };
 
 class FileExplorer {
