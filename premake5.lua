@@ -191,6 +191,7 @@ project "Botapica"
 		"Source/**.cpp",
                 "Source/**/*.cpp",
 		"Include/**.h",
+		"Include/**/*.h",
                 "Shaders/**"
 	}
 

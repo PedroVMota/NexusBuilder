@@ -2,8 +2,9 @@
 #define SHADER_H
 
 #include "main.h"
+#include "Interfaces/MaterialShaderInterface.h"
 
-class Shader
+class Shader : public MaterialShaderInterface
 {
 private:
     char *p_fragmentCode = NULL;
@@ -29,6 +30,10 @@ public:
     const char *getVertCode() const;
     const GLuint& getShaderProgram() const;
 
+    // Implement MaterialShaderInterface
+    void BindMaterialUniforms(const Material& material) override;
+    bool IsCompatibleWith(const Material& material) override;
+    void Use() override;
 
     static const char* loadShader(char *_file);
 };

@@ -2,7 +2,8 @@
 
 // Default constructor
 Material::Material() 
-	: ambient(0.2f, 0.2f, 0.2f),
+	: shader(nullptr),
+	  ambient(0.2f, 0.2f, 0.2f),
 	  diffuse(0.8f, 0.8f, 0.8f),
 	  specular(1.0f, 1.0f, 1.0f),
 	  shininess(32.0f),
@@ -15,7 +16,8 @@ Material::Material()
 // Parameterized constructor
 Material::Material(const Vec3 &ambient, const Vec3 &diffuse, 
 				   const Vec3 &specular, float shininess)
-	: ambient(ambient),
+	: shader(nullptr),
+	  ambient(ambient),
 	  diffuse(diffuse),
 	  specular(specular),
 	  shininess(shininess),
@@ -23,6 +25,52 @@ Material::Material(const Vec3 &ambient, const Vec3 &diffuse,
 	  normalTexturePath(""),
 	  specularTexturePath("")
 {
+}
+
+// Constructor with Shader
+Material::Material(const Shader &shader_)
+	: shader(std::make_shared<Shader>(shader_)),
+	  ambient(0.2f, 0.2f, 0.2f),
+	  diffuse(0.8f, 0.8f, 0.8f),
+	  specular(1.0f, 1.0f, 1.0f),
+	  shininess(32.0f),
+	  diffuseTexturePath(""),
+	  normalTexturePath(""),
+	  specularTexturePath("")
+{
+}
+
+// Copy constructor
+Material::Material(const Material& other)
+	: shader(other.shader),
+	  ambient(other.ambient),
+	  diffuse(other.diffuse),
+	  specular(other.specular),
+	  shininess(other.shininess),
+	  diffuseTexturePath(other.diffuseTexturePath),
+	  normalTexturePath(other.normalTexturePath),
+	  specularTexturePath(other.specularTexturePath)
+{
+}
+
+// Assignment operator
+Material& Material::operator=(const Material& other) {
+	if (this != &other) {
+		shader = other.shader;
+		ambient = other.ambient;
+		diffuse = other.diffuse;
+		specular = other.specular;
+		shininess = other.shininess;
+		diffuseTexturePath = other.diffuseTexturePath;
+		normalTexturePath = other.normalTexturePath;
+		specularTexturePath = other.specularTexturePath;
+	}
+	return *this;
+}
+
+// Destructor
+Material::~Material() {
+	// shared_ptr handles cleanup automatically
 }
 
 //* THESE ARE TEMPORARY, FUTURE IMPLEMENTATION SHOULD ALLOW USER TO CHANGE MATERIAL WITHIN EDITOR ITSELF. -- NEED TO CREATE MATERIAL EDITING 
@@ -62,4 +110,35 @@ Material Material::CreateGlassMaterial() {
 		Vec3(0.9f, 0.9f, 0.9f),			// specular - high reflectivity
 		96.0f							// shininess - very shiny
 	);
+}
+
+
+
+
+// Material shader interface methods
+void Material::BindUniforms() const {
+    if (shader) {
+        shader->BindMaterialUniforms(*this);
+    }
+}
+
+void Material::UseShader() const {
+    if (shader) {
+        shader->Use();
+    }
+}
+
+bool Material::HasShader() const {
+    return shader != nullptr;
+}
+
+// Shader management methods
+void Material::SetShader(std::shared_ptr<MaterialShaderInterface> newShader) {
+    if (newShader && newShader->IsCompatibleWith(*this)) {
+        shader = newShader;
+    }
+}
+
+std::shared_ptr<MaterialShaderInterface> Material::GetShader() const {
+    return shader;
 }

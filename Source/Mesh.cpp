@@ -101,42 +101,32 @@ void Mesh::unbind() const {
 
 void Mesh::draw() const {
 	if (isValid()) {
-		// Check if a shader program is currently bound
-		GLint currentProgram;
-		glGetIntegerv(GL_CURRENT_PROGRAM, &currentProgram);
-		
-		if (currentProgram == 0) {
-			// No shader program bound, create minimal shader for Core Profile
+		// Use material's shader if available, otherwise use default
+		if (material.HasShader()) {
+			material.UseShader();
+			material.BindUniforms();
+		} else {
+			// No material shader, use default
 			static GLuint defaultShader = 0;
 			if (defaultShader == 0) {
 				defaultShader = createDefaultShader();
 			}
-			
 			if (defaultShader != 0) {
 				glUseProgram(defaultShader);
-				
-				bind();
-				if (!indices.empty()) {
-					glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(indices.size()), GL_UNSIGNED_INT, 0);
-				} else {
-					glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(vertices.size()));
-				}
-				unbind();
-				
-				glUseProgram(0);
 			} else {
 				BOTAPICA_LOG_ERROR("Failed to create default shader for mesh rendering");
+				return;
 			}
-		} else {
-			// Shader program is bound, use modern OpenGL
-			bind();
-			if (!indices.empty()) {
-				glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(indices.size()), GL_UNSIGNED_INT, 0);
-			} else {
-				glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(vertices.size()));
-			}
-			unbind();
 		}
+		
+		// Draw the mesh
+		bind();
+		if (!indices.empty()) {
+			glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(indices.size()), GL_UNSIGNED_INT, 0);
+		} else {
+			glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(vertices.size()));
+		}
+		unbind();
 	}
 }
 

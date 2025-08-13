@@ -3,9 +3,17 @@
 #include "main.h"
 #include <glm/glm.hpp>
 #include <string>
+#include "Shader.h"
+#include "Interfaces/MaterialShaderInterface.h"
 
 class Material {
 private:
+
+	// Shader Compatibility
+	std::shared_ptr<MaterialShaderInterface> shader;
+
+
+
 	Vec3 ambient;
 	Vec3 diffuse;
 	Vec3 specular;
@@ -18,8 +26,20 @@ private:
 
 public:
 	Material();
-	Material(const Vec3 &ambient, const Vec3 &diffuse, 
-			const Vec3 &specular, float shininess);
+	Material(const Shader &);
+	Material(const Material&);
+	Material(const Vec3 &, const Vec3 &, const Vec3 &, float);
+	Material& operator=(const Material&); 
+	~Material();
+
+	// Shader methods
+	void BindUniforms() const;
+	void UseShader() const;
+	bool HasShader() const;
+	void SetShader(std::shared_ptr<MaterialShaderInterface> shader);
+	std::shared_ptr<MaterialShaderInterface> GetShader() const;
+
+
 
 	// Getters
 	const Vec3 &GetAmbient() const { return ambient;}

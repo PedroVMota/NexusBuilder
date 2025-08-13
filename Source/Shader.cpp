@@ -1,4 +1,7 @@
 #include "Shader.h"
+#include "Material.h"
+#include <fstream>
+#include <cstring>
 
 Shader::Shader(const Shader *_shader) { *this = *_shader; }
 
@@ -128,6 +131,53 @@ Shader::~Shader() {
 	if (p_shaderProgram != -1) glDeleteProgram(p_shaderProgram);
 }
 
+
+// Implement MaterialShaderInterface methods
+void Shader::BindMaterialUniforms(const Material& material) {
+    glUseProgram(p_shaderProgram);
+    
+    // Get uniform locations and set material properties
+    GLint ambientLoc = glGetUniformLocation(p_shaderProgram, "materialAmbient");
+    GLint diffuseLoc = glGetUniformLocation(p_shaderProgram, "materialDiffuse");
+    GLint specularLoc = glGetUniformLocation(p_shaderProgram, "materialSpecular");
+    GLint shininessLoc = glGetUniformLocation(p_shaderProgram, "materialShininess");
+    
+    if (ambientLoc != -1) {
+        const Vec3& ambient = material.GetAmbient();
+        glUniform3f(ambientLoc, ambient.x, ambient.y, ambient.z);
+    }
+    
+    if (diffuseLoc != -1) {
+        const Vec3& diffuse = material.GetDiffuse();
+        glUniform3f(diffuseLoc, diffuse.x, diffuse.y, diffuse.z);
+    }
+    
+    if (specularLoc != -1) {
+        const Vec3& specular = material.GetSpecular();
+        glUniform3f(specularLoc, specular.x, specular.y, specular.z);
+    }
+    
+    if (shininessLoc != -1) {
+        glUniform1f(shininessLoc, material.GetShininess());
+    }
+}
+
+bool Shader::IsCompatibleWith(const Material& material) {
+    // Check if shader has required uniforms for this material
+    glUseProgram(p_shaderProgram);
+    
+    GLint ambientLoc = glGetUniformLocation(p_shaderProgram, "materialAmbient");
+    GLint diffuseLoc = glGetUniformLocation(p_shaderProgram, "materialDiffuse");
+    GLint specularLoc = glGetUniformLocation(p_shaderProgram, "materialSpecular");
+    GLint shininessLoc = glGetUniformLocation(p_shaderProgram, "materialShininess");
+    
+    // Basic compatibility: shader should have at least diffuse uniform
+    return diffuseLoc != -1;
+}
+
+void Shader::Use() {
+    glUseProgram(p_shaderProgram);
+}
 
 const char* Shader::loadShader(char* _file) {
     std::ifstream ifs(_file);
