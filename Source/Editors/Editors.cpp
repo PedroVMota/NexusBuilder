@@ -1,5 +1,5 @@
 #include "main.h"
-#include "Mesh.h"
+#include "Shader.h"
 
 void Editor::BeginDockspace()
 {
@@ -440,6 +440,8 @@ void Viewport::Resize(int width, int height)
 
 void Viewport::Render()
 {
+
+
 	ImGui::Begin("Viewport");
 	
 	// Get available content region
@@ -459,6 +461,72 @@ void Viewport::Render()
 			// Clear the framebuffer
 			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
+
+			// TODO: Render 3D scene here
+
+			GLuint shaderProgram;
+			GLuint VAO;
+			// Vertex shader source
+			
+
+			// Vertices with position (x,y,z) and color (r,g,b) for each vertex
+			float vertices[] = {
+				// Position        // Color
+				-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, // Bottom left - Red
+				 0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, // Bottom right - Green  
+				 0.0f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f  // Top - Blue
+			};
+
+			// Generate and bind buffers
+			GLuint VBO;
+			glGenVertexArrays(1, &VAO);
+			glGenBuffers(1, &VBO);
+
+			glBindVertexArray(VAO);
+			glBindBuffer(GL_ARRAY_BUFFER, VBO);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+			// Set vertex attributes
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+			glEnableVertexAttribArray(0);
+
+			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+			glEnableVertexAttribArray(1);
+
+			const char* frag = Shader::loadShader("Shaders/debug.frag");
+			const char* vert = Shader::loadShader("Shaders/debug.vert");
+			if (!frag || !vert) {
+				BOTAPICA_LOG_ERROR("Something went wrong loading the shader");
+			}
+			else {
+				Shader shader = Shader(frag, vert);
+				glUseProgram(shader.getShaderProgram());
+			}
+			delete frag;
+			delete vert;
+
+
+
+
+
+			// Render triangle
+			glBindVertexArray(VAO);
+			glDrawArrays(GL_TRIANGLES, 0, 3);  // THIS WAS MISSING!
+			glBindVertexArray(0);
+			// Unbind
+   
+
+
+
+
+
+
+
+			
+			
+			
 			
 			static Mesh triangle = Mesh::CreateTriangle();
 			triangle.draw();
@@ -473,6 +541,11 @@ void Viewport::Render()
 				ImVec2(0, 1), // UV coordinates flipped
 				ImVec2(1, 0)
 			);
+
+			glDeleteBuffers(1, &VBO);
+			glDeleteVertexArrays(1, &VAO);
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+			glBindVertexArray(0);
 		}
 		else
 		{
