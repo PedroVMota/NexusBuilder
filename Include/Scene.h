@@ -53,6 +53,14 @@ private:
 	// Shader management
 	std::unique_ptr<Shader> m_defaultShader;
 	GLuint m_shaderProgram;
+
+	bool m_showGrid;
+	Vec3 m_gridColor;
+	float m_gridSize;
+	int m_gridDivisions;
+	GLuint m_gridVAO;
+	GLuint m_gridVBO;
+	GLuint m_gridShaderProgram;
 	
 	// Scene management
 	bool m_needsUpdate;
@@ -139,6 +147,16 @@ public:
 	void FrameAll(); // Frames all objects in the scene
 	size_t GetRenderableCount() const { return m_meshRenderers.size(); }
 	size_t GetLightCount() const { return m_lights.size(); }
+
+	// World Grid settings.
+	void SetShowGrid(bool show) { m_showGrid = show; }
+	bool isGridVisible() const { return m_showGrid; }
+	void SetGridColor(const Vec3 color) { m_gridColor = color; }
+	const Vec3 &GetGridColor() const { return m_gridColor; }
+	void SetGridSize(float size) { m_gridSize = size; UpdateGridMesh(); }
+	float GetGridSize() const { return m_gridSize; }
+	void SetGridDivisions(int divisions) { m_gridDivisions = divisions; }
+	int GetGridDivisions() const { return m_gridDivisions; }
 	
 private:
 	// Internal rendering helpers
@@ -152,4 +170,9 @@ private:
 	void SetShaderUniforms(const Mat4& modelMatrix, const Mat4& viewMatrix, const Mat4& projectionMatrix);
 	void SetLightingUniforms();
 	void SetMaterialUniforms(const Material& material);
+
+	// Grid methods
+	void SetupGridShader();
+	void UpdateGridMesh();
+	void RenderGrid();
 };

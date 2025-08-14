@@ -15,10 +15,17 @@ void MeshRenderer::Render(const Mat4& modelMatrix, const Mat4& viewMatrix, const
 
 // Scene Implementation
 Scene::Scene() 
-	: m_backgroundColor(0.4f, 0.6f, 0.8f)  // Light blue background
+	: m_backgroundColor(0.2f, 0.2f, 0.2f)  // Light blue background
 	, m_depthTestEnabled(true)
 	, m_backfaceCullingEnabled(true)
 	, m_wireframeMode(false)
+	, m_showGrid(true)
+	, m_gridColor(0.6f, 0.6f, 0.6f)  // Gray grid
+	, m_gridSize(1.0f)
+	, m_gridDivisions(100)
+	, m_gridVAO(0)
+	, m_gridVBO(0)
+	, m_gridShaderProgram(0)
 	, m_needsUpdate(false)
 	, m_deltaTime(0.0f)
 	, m_shaderProgram(0) {
@@ -28,16 +35,21 @@ Scene::Scene()
 	
 	// Setup default shader
 	SetupDefaultShader();
+
+	// Setup grid
+	SetupGridShader();
+	UpdateGridMesh();
 	
 	BOTAPICA_LOG_INFO("Scene initialized");
 }
 
 Scene::~Scene() {
 	// Cleanup shader
-	if (m_shaderProgram != 0) {
-		glDeleteProgram(m_shaderProgram);
-	}
-	
+	if (m_shaderProgram != 0) { glDeleteProgram(m_shaderProgram); }
+	if (m_gridShaderProgram != 0) { glDeleteProgram(m_gridShaderProgram); }
+	if ( m_gridVAO != 0 ) { glDeleteVertexArrays(1, &m_gridVAO); }
+	if (m_gridVBO != 0 ) { glDeleteBuffers(1, &m_gridVBO); }
+
 	// Clear all mesh renderers
 	m_meshRenderers.clear();
 	
@@ -57,6 +69,8 @@ void Scene::Draw() {
 		BOTAPICA_LOG_WARN("No camera set for scene rendering");
 		return;
 	}
+
+	if (m_showGrid) { RenderGrid(); }
 	
 	// Get view and projection matrices
 	Mat4 viewMatrix = m_camera->GetViewMatrix();
@@ -382,11 +396,115 @@ void Scene::FrameAll() {
 			}
 		}
 	}
-	
+
 	if (!first) {
 		Vec3 center = (minBounds + maxBounds) * 0.5f;
 		float radius = glm::length(maxBounds - minBounds) * 0.5f;
 		m_camera->FrameAll(center, radius);
+	}
+}
+
+void Scene::SetupGridShader() {
+	// TODO TEST IMPLEMENTATION OF GRID SHADER -- TRANSITION TO USE SHADER CLASS AFTER CONFIRMING
+	const char *gridVertexShaderSource = R"(
+#version 330 core
+layout (location = 0) in vec3 aPos;
+
+uniform mat4 view;
+uniform mat4 projection;
+uniform vec3 cameraPos;
+uniform float gridSize;
+
+out vec3 WorldPos;
+
+void main() {
+	// Snap grid to camera position to create infinite effect
+	vec3 snappedCameraPos = floor(cameraPos / gridSize) * gridSize;
+	snappedCameraPos.y = 0.0;
+
+	vec3 worldPos = aPos + snappedCameraPos;
+	worldPos.y = 0.0;
+	
+	
+	WorldPos = worldPos;
+	gl_Position = projection * view * vec4(worldPos, 1.0);
+}
+)";
+
+	const char *gridFragmentShaderSource = R"(
+#version 330 core
+out vec4 FragColor;
+
+in vec3 WorldPos;
+
+uniform vec3 gridColor;
+uniform float gridSize;
+uniform vec3 cameraPos;
+
+void main() {
+	vec2 coord = WorldPos.xz / gridSize;
+	vec2 grid = abs(fract(coord - 0.5) - 0.5) / fwidth(coord);
+	float line = min(grid.x, grid.y);
+	
+	// Fade based on distance from camera
+	float distance = length(WorldPos - cameraPos);
+	float fadeStart = gridSize * 20.0;
+	float fadeEnd = gridSize * 50.0;
+	float alpha = 1.0 - smoothstep(fadeStart, fadeEnd, distance);
+	
+	// Make grid lines more visible
+	float gridAlpha = (1.0 - min(line, 1.0)) * alpha * 0.5;
+	
+	FragColor = vec4(gridColor, gridAlpha);
+}
+)";
+
+	// Create and compile vertex shader
+	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+	glShaderSource(vertexShader, 1, &gridVertexShaderSource, NULL);
+	glCompileShader(vertexShader);
+
+	GLint success;
+	GLchar infoLog[512];
+	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+	if (!success) {
+		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+		BOTAPICA_LOG_ERROR("Grid vertex shader compilation failed: " + String(infoLog));
+		return;
+	}
+
+	GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fragmentShader, 1, &gridFragmentShaderSource, NULL);
+	glCompileShader(fragmentShader);
+
+	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+	if (!success) {
+		glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
+		BOTAPICA_LOG_ERROR("Grid fragment shader compilation failed: " + String(infoLog));
+		glDeleteShader(vertexShader);
+		return;
+	}
+
+	// Create shader program
+	m_gridShaderProgram = glCreateProgram();
+	glAttachShader(m_gridShaderProgram, vertexShader);
+	glAttachShader(m_gridShaderProgram, fragmentShader);
+	glLinkProgram(m_gridShaderProgram);
+	
+	// Check for linking errors
+	glGetProgramiv(m_gridShaderProgram, GL_LINK_STATUS, &success);
+	if (!success) {
+		glGetProgramInfoLog(m_gridShaderProgram, 512, NULL, infoLog);
+		BOTAPICA_LOG_ERROR("Grid shader program linking failed: " + String(infoLog));
+		m_gridShaderProgram = 0;
+	}
+	
+	// Clean up shaders
+	glDeleteShader(vertexShader);
+	glDeleteShader(fragmentShader);
+	
+	if (m_gridShaderProgram != 0) {
+		BOTAPICA_LOG_INFO("Grid shader created successfully");
 	}
 }
 
@@ -501,6 +619,87 @@ void main() {
 	if (m_shaderProgram != 0) {
 		BOTAPICA_LOG_INFO("Default shader created successfully");
 	}
+}
+
+void Scene::UpdateGridMesh() {
+	if (m_gridShaderProgram == 0) return;
+	
+	// Create grid vertices
+	std::vector<float> vertices;
+	float halfSize = m_gridDivisions * m_gridSize * 0.5f;
+	
+	// Horizontal lines
+	for (int i = 0; i <= m_gridDivisions; ++i) {
+		float z = (i - m_gridDivisions / 2) * m_gridSize;
+		vertices.insert(vertices.end(), {
+			-halfSize, 0.0f, z,
+			 halfSize, 0.0f, z
+		});
+	}
+	
+	// Vertical lines
+	for (int i = 0; i <= m_gridDivisions; ++i) {
+		float x = (i - m_gridDivisions / 2) * m_gridSize;
+		vertices.insert(vertices.end(), {
+			x, 0.0f, -halfSize,
+			x, 0.0f,  halfSize
+		});
+	}
+	
+	// Create or update VAO and VBO
+	if (m_gridVAO == 0) {
+		glGenVertexArrays(1, &m_gridVAO);
+		glGenBuffers(1, &m_gridVBO);
+	}
+	
+	glBindVertexArray(m_gridVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, m_gridVBO);
+	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
+	
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+	
+	glBindVertexArray(0);
+	
+	BOTAPICA_LOG_INFO("Grid mesh updated with " + std::to_string(vertices.size() / 3) + " vertices");
+}
+
+void Scene::RenderGrid() {
+	if (m_gridShaderProgram == 0 || m_gridVAO == 0 || !m_camera) {
+		return;
+	}
+	
+	// Enable blending for grid transparency
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	
+	// Use grid shader
+	glUseProgram(m_gridShaderProgram);
+	
+	// Set uniforms
+	Mat4 viewMatrix = m_camera->GetViewMatrix();
+	Mat4 projectionMatrix = m_camera->GetProjectionMatrix();
+	Vec3 cameraPos = m_camera->GetPosition();
+	
+	GLint viewLoc = glGetUniformLocation(m_gridShaderProgram, "view");
+	GLint projLoc = glGetUniformLocation(m_gridShaderProgram, "projection");
+	GLint cameraPosLoc = glGetUniformLocation(m_gridShaderProgram, "cameraPos");
+	GLint gridColorLoc = glGetUniformLocation(m_gridShaderProgram, "gridColor");
+	GLint gridSizeLoc = glGetUniformLocation(m_gridShaderProgram, "gridSize");
+	
+	if (viewLoc != -1) glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(viewMatrix));
+	if (projLoc != -1) glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
+	if (cameraPosLoc != -1) glUniform3fv(cameraPosLoc, 1, glm::value_ptr(cameraPos));
+	if (gridColorLoc != -1) glUniform3fv(gridColorLoc, 1, glm::value_ptr(m_gridColor));
+	if (gridSizeLoc != -1) glUniform1f(gridSizeLoc, m_gridSize);
+	
+	// Render grid
+	glBindVertexArray(m_gridVAO);
+	glDrawArrays(GL_LINES, 0, (m_gridDivisions + 1) * 4);
+	glBindVertexArray(0);
+	
+	glUseProgram(0);
+	glDisable(GL_BLEND);
 }
 
 void Scene::ApplyRenderingSettings() {
