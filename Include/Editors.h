@@ -33,6 +33,7 @@ private:
 	unsigned int m_framebuffer = 0;
 	unsigned int m_colorTexture = 0;
 	unsigned int m_depthRenderbuffer = 0;
+
 	int m_width = 800;
 	int m_height = 600;
 	bool m_framebufferValid = false;
