@@ -9,7 +9,8 @@ bin-int/
 *.vcxproj.user
 Makefile
 *.make
-
+*.log
+logs/
 # IDE files
 .vs/
 .vscode/
@@ -24,6 +25,9 @@ CLAUDE.md
 # OS files
 .DS_Store
 Thumbs.db
+
+
+
 
 
 *.exe

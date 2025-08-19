@@ -16,3 +16,91 @@
    ...
    fun:_glfwInitGLX
 }
+{
+   NVIDIA-EGL-Driver-Leak-1
+   Memcheck:Leak
+   ...
+   obj:/usr/lib/libEGL_nvidia.so*
+}
+{
+   NVIDIA-EGL-Driver-Leak-2
+   Memcheck:Leak
+   ...
+   fun:loadEGLExternalPlatform
+}
+{
+   NVIDIA-Wayland-EGL-Leak
+   Memcheck:Leak
+   ...
+   obj:*/wayland-eglhandle.c
+}
+{
+   NVIDIA-GLCore-Realloc-Zero
+   Memcheck:Addr1
+   fun:realloc
+   obj:/usr/lib/libnvidia-glcore.so*
+   obj:/usr/lib/libGLX_nvidia.so*
+   ...
+}
+{
+   NVIDIA-GLCore-Realloc-Zero-Size
+   Memcheck:Value8
+   fun:realloc
+   obj:/usr/lib/libnvidia-glcore.so*
+   obj:/usr/lib/libGLX_nvidia.so*
+   ...
+}
+{
+   NVIDIA-GLCore-Posix-Memalign-Zero
+   Memcheck:Param
+   posix_memalign(size)
+   fun:posix_memalign
+   obj:/usr/lib/libnvidia-glcore.so*
+   obj:/usr/lib/libGLX_nvidia.so*
+   ...
+}
+{
+   NVIDIA-EGLCore-Realloc-Zero
+   Memcheck:Addr1
+   fun:realloc
+   obj:/usr/lib/libnvidia-eglcore.so*
+   ...
+}
+{
+   NVIDIA-EGLCore-Realloc-Zero-Size
+   Memcheck:Value8
+   fun:realloc
+   obj:/usr/lib/libnvidia-eglcore.so*
+   ...
+}
+{
+   NVIDIA-EGLCore-Posix-Memalign-Zero
+   Memcheck:Param
+   posix_memalign(size)
+   fun:posix_memalign
+   obj:/usr/lib/libnvidia-eglcore.so*
+}
+{
+   DBUS-Message-Leak
+   Memcheck:Leak
+   fun:calloc
+   fun:dbus_message_new_empty_header
+   ...
+   fun:internal_bus_get
+}
+{
+   NVIDIA-GLCore-Driver-Leak-1
+   Memcheck:Leak
+   fun:malloc
+   obj:/usr/lib/libnvidia-glcore.so*
+   ...
+   fun:__run_exit_handlers
+}
+{
+   NVIDIA-GLCore-Driver-Leak-2
+   Memcheck:Leak
+   fun:malloc
+   obj:/usr/lib/libnvidia-glcore.so*
+   ...
+   fun:__run_exit_handlers
+}

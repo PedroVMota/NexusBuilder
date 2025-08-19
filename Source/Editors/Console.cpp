@@ -1,4 +1,4 @@
-#include "Editors.h"
+#include "Console.h"
 #include <cstdarg>
 #include <cstring>
 #include <cctype>
@@ -8,7 +8,6 @@
 
 Console::Console()
 {
-	ClearLog();
 	memset(m_inputBuf, 0, sizeof(m_inputBuf));
 	m_historyPos = -1;
 	m_autoScroll = true;
@@ -26,8 +25,7 @@ Console::Console()
 Console::~Console()
 {
 	ClearLog();
-	for (int i = 0; i < m_history.Size; i++)
-		free(m_history[i]);
+	ClearHistory();
 }
 
 // String utilities
@@ -49,6 +47,9 @@ char* Console::Strdup(const char* s)
 {
 	size_t len = strlen(s) + 1;
 	void* buf = malloc(len);
+	if (buf == nullptr) {
+		return nullptr;
+	}
 	return (char*)memcpy(buf, s, len);
 }
 
@@ -66,6 +67,14 @@ void Console::ClearLog()
 	m_items.clear();
 }
 
+void Console::ClearHistory()
+{
+	for (int i = 0; i < m_history.Size; i++)
+		free(m_history[i]);
+	m_history.clear();
+	m_historyPos = -1;
+}
+
 void Console::AddLog(const char* fmt, ...)
 {
 	char buf[1024];
@@ -74,7 +83,10 @@ void Console::AddLog(const char* fmt, ...)
 	vsnprintf(buf, sizeof(buf), fmt, args);
 	buf[sizeof(buf) - 1] = 0;
 	va_end(args);
-	m_items.push_back(Strdup(buf));
+	char* item = Strdup(buf);
+	if (item != nullptr) {
+		m_items.push_back(item);
+	}
 }
 
 void Console::Render()
@@ -215,7 +227,10 @@ void Console::ExecCommand(const char* commandLine)
 			break;
 		}
 	}
-	m_history.push_back(Strdup(commandLine));
+	char* histItem = Strdup(commandLine);
+	if (histItem != nullptr) {
+		m_history.push_back(histItem);
+	}
 
 	if (Stricmp(commandLine, "clear") == 0)
 	{

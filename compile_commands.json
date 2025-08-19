@@ -1,0 +1,861 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-D_GLFW_X11",
+      "-Iinclude",
+      "-m64",
+      "-O0",
+      "-fPIC",
+      "-g",
+      "-c",
+      "-o",
+      "../../bin-int/Debug-linux-x86_64/GLFW/context.o",
+      "src/context.c"
+    ],
+    "directory": "/home/pedro/Projects/NexusBuilder/lib/glfw",
+    "file": "/home/pedro/Projects/NexusBuilder/lib/glfw/src/context.c",
+    "output": "/home/pedro/Projects/NexusBuilder/bin-int/Debug-linux-x86_64/GLFW/context.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-D_GLFW_X11",
+      "-Iinclude",
+      "-m64",
+      "-O0",
+      "-fPIC",
+      "-g",
+      "-c",
+      "-o",
+      "../../bin-int/Debug-linux-x86_64/GLFW/egl_context.o",
+      "src/egl_context.c"
+    ],
+    "directory": "/home/pedro/Projects/NexusBuilder/lib/glfw",
+    "file": "/home/pedro/Projects/NexusBuilder/lib/glfw/src/egl_context.c",
+    "output": "/home/pedro/Projects/NexusBuilder/bin-int/Debug-linux-x86_64/GLFW/egl_context.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-D_GLFW_X11",
+      "-Iinclude",
+      "-m64",
+      "-O0",
+      "-fPIC",
+      "-g",
+      "-c",
+      "-o",
+      "../../bin-int/Debug-linux-x86_64/GLFW/glx_context.o",
+      "src/glx_context.c"
+    ],
+    "directory": "/home/pedro/Projects/NexusBuilder/lib/glfw",
+    "file": "/home/pedro/Projects/NexusBuilder/lib/glfw/src/glx_context.c",
+    "output": "/home/pedro/Projects/NexusBuilder/bin-int/Debug-linux-x86_64/GLFW/glx_context.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-D_GLFW_X11",
+      "-Iinclude",
+      "-m64",
+      "-O0",
+      "-fPIC",
+      "-g",
+      "-c",
+      "-o",
+      "../../bin-int/Debug-linux-x86_64/GLFW/init.o",
+      "src/init.c"
+    ],
+    "directory": "/home/pedro/Projects/NexusBuilder/lib/glfw",
+    "file": "/home/pedro/Projects/NexusBuilder/lib/glfw/src/init.c",
+    "output": "/home/pedro/Projects/NexusBuilder/bin-int/Debug-linux-x86_64/GLFW/init.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-D_GLFW_X11",
+      "-Iinclude",
+      "-m64",
+      "-O0",
+      "-fPIC",
+      "-g",
+      "-c",
+      "-o",
+      "../../bin-int/Debug-linux-x86_64/GLFW/input.o",
+      "src/input.c"
+    ],
+    "directory": "/home/pedro/Projects/NexusBuilder/lib/glfw",
+    "file": "/home/pedro/Projects/NexusBuilder/lib/glfw/src/input.c",
+    "output": "/home/pedro/Projects/NexusBuilder/bin-int/Debug-linux-x86_64/GLFW/input.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-D_GLFW_X11",
+      "-Iinclude",
+      "-m64",
+      "-O0",
+      "-fPIC",
+      "-g",
+      "-c",
+      "-o",
+      "../../bin-int/Debug-linux-x86_64/GLFW/linux_joystick.o",
+      "src/linux_joystick.c"
+    ],
+    "directory": "/home/pedro/Projects/NexusBuilder/lib/glfw",
+    "file": "/home/pedro/Projects/NexusBuilder/lib/glfw/src/linux_joystick.c",
+    "output": "/home/pedro/Projects/NexusBuilder/bin-int/Debug-linux-x86_64/GLFW/linux_joystick.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-D_GLFW_X11",
+      "-Iinclude",
+      "-m64",
+      "-O0",
+      "-fPIC",
+      "-g",
+      "-c",
+      "-o",
+      "../../bin-int/Debug-linux-x86_64/GLFW/monitor.o",
+      "src/monitor.c"
+    ],
+    "directory": "/home/pedro/Projects/NexusBuilder/lib/glfw",
+    "file": "/home/pedro/Projects/NexusBuilder/lib/glfw/src/monitor.c",
+    "output": "/home/pedro/Projects/NexusBuilder/bin-int/Debug-linux-x86_64/GLFW/monitor.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-D_GLFW_X11",
+      "-Iinclude",
+      "-m64",
+      "-O0",
+      "-fPIC",
+      "-g",
+      "-c",
+      "-o",
+      "../../bin-int/Debug-linux-x86_64/GLFW/null_init.o",
+      "src/null_init.c"
+    ],
+    "directory": "/home/pedro/Projects/NexusBuilder/lib/glfw",
+    "file": "/home/pedro/Projects/NexusBuilder/lib/glfw/src/null_init.c",
+    "output": "/home/pedro/Projects/NexusBuilder/bin-int/Debug-linux-x86_64/GLFW/null_init.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-D_GLFW_X11",
+      "-Iinclude",
+      "-m64",
+      "-O0",
+      "-fPIC",
+      "-g",
+      "-c",
+      "-o",
+      "../../bin-int/Debug-linux-x86_64/GLFW/null_joystick.o",
+      "src/null_joystick.c"
+    ],
+    "directory": "/home/pedro/Projects/NexusBuilder/lib/glfw",
+    "file": "/home/pedro/Projects/NexusBuilder/lib/glfw/src/null_joystick.c",
+    "output": "/home/pedro/Projects/NexusBuilder/bin-int/Debug-linux-x86_64/GLFW/null_joystick.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-D_GLFW_X11",
+      "-Iinclude",
+      "-m64",
+      "-O0",
+      "-fPIC",
+      "-g",
+      "-c",
+      "-o",
+      "../../bin-int/Debug-linux-x86_64/GLFW/null_monitor.o",
+      "src/null_monitor.c"
+    ],
+    "directory": "/home/pedro/Projects/NexusBuilder/lib/glfw",
+    "file": "/home/pedro/Projects/NexusBuilder/lib/glfw/src/null_monitor.c",
+    "output": "/home/pedro/Projects/NexusBuilder/bin-int/Debug-linux-x86_64/GLFW/null_monitor.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-D_GLFW_X11",
+      "-Iinclude",
+      "-m64",
+      "-O0",
+      "-fPIC",
+      "-g",
+      "-c",
+      "-o",
+      "../../bin-int/Debug-linux-x86_64/GLFW/null_window.o",
+      "src/null_window.c"
+    ],
+    "directory": "/home/pedro/Projects/NexusBuilder/lib/glfw",
+    "file": "/home/pedro/Projects/NexusBuilder/lib/glfw/src/null_window.c",
+    "output": "/home/pedro/Projects/NexusBuilder/bin-int/Debug-linux-x86_64/GLFW/null_window.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-D_GLFW_X11",
+      "-Iinclude",
+      "-m64",
+      "-O0",
+      "-fPIC",
+      "-g",
+      "-c",
+      "-o",
+      "../../bin-int/Debug-linux-x86_64/GLFW/osmesa_context.o",
+      "src/osmesa_context.c"
+    ],
+    "directory": "/home/pedro/Projects/NexusBuilder/lib/glfw",
+    "file": "/home/pedro/Projects/NexusBuilder/lib/glfw/src/osmesa_context.c",
+    "output": "/home/pedro/Projects/NexusBuilder/bin-int/Debug-linux-x86_64/GLFW/osmesa_context.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-D_GLFW_X11",
+      "-Iinclude",
+      "-m64",
+      "-O0",
+      "-fPIC",
+      "-g",
+      "-c",
+      "-o",
+      "../../bin-int/Debug-linux-x86_64/GLFW/platform.o",
+      "src/platform.c"
+    ],
+    "directory": "/home/pedro/Projects/NexusBuilder/lib/glfw",
+    "file": "/home/pedro/Projects/NexusBuilder/lib/glfw/src/platform.c",
+    "output": "/home/pedro/Projects/NexusBuilder/bin-int/Debug-linux-x86_64/GLFW/platform.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-D_GLFW_X11",
+      "-Iinclude",
+      "-m64",
+      "-O0",
+      "-fPIC",
+      "-g",
+      "-c",
+      "-o",
+      "../../bin-int/Debug-linux-x86_64/GLFW/posix_module.o",
+      "src/posix_module.c"
+    ],
+    "directory": "/home/pedro/Projects/NexusBuilder/lib/glfw",
+    "file": "/home/pedro/Projects/NexusBuilder/lib/glfw/src/posix_module.c",
+    "output": "/home/pedro/Projects/NexusBuilder/bin-int/Debug-linux-x86_64/GLFW/posix_module.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-D_GLFW_X11",
+      "-Iinclude",
+      "-m64",
+      "-O0",
+      "-fPIC",
+      "-g",
+      "-c",
+      "-o",
+      "../../bin-int/Debug-linux-x86_64/GLFW/posix_poll.o",
+      "src/posix_poll.c"
+    ],
+    "directory": "/home/pedro/Projects/NexusBuilder/lib/glfw",
+    "file": "/home/pedro/Projects/NexusBuilder/lib/glfw/src/posix_poll.c",
+    "output": "/home/pedro/Projects/NexusBuilder/bin-int/Debug-linux-x86_64/GLFW/posix_poll.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-D_GLFW_X11",
+      "-Iinclude",
+      "-m64",
+      "-O0",
+      "-fPIC",
+      "-g",
+      "-c",
+      "-o",
+      "../../bin-int/Debug-linux-x86_64/GLFW/posix_thread.o",
+      "src/posix_thread.c"
+    ],
+    "directory": "/home/pedro/Projects/NexusBuilder/lib/glfw",
+    "file": "/home/pedro/Projects/NexusBuilder/lib/glfw/src/posix_thread.c",
+    "output": "/home/pedro/Projects/NexusBuilder/bin-int/Debug-linux-x86_64/GLFW/posix_thread.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-D_GLFW_X11",
+      "-Iinclude",
+      "-m64",
+      "-O0",
+      "-fPIC",
+      "-g",
+      "-c",
+      "-o",
+      "../../bin-int/Debug-linux-x86_64/GLFW/posix_time.o",
+      "src/posix_time.c"
+    ],
+    "directory": "/home/pedro/Projects/NexusBuilder/lib/glfw",
+    "file": "/home/pedro/Projects/NexusBuilder/lib/glfw/src/posix_time.c",
+    "output": "/home/pedro/Projects/NexusBuilder/bin-int/Debug-linux-x86_64/GLFW/posix_time.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-D_GLFW_X11",
+      "-Iinclude",
+      "-m64",
+      "-O0",
+      "-fPIC",
+      "-g",
+      "-c",
+      "-o",
+      "../../bin-int/Debug-linux-x86_64/GLFW/vulkan.o",
+      "src/vulkan.c"
+    ],
+    "directory": "/home/pedro/Projects/NexusBuilder/lib/glfw",
+    "file": "/home/pedro/Projects/NexusBuilder/lib/glfw/src/vulkan.c",
+    "output": "/home/pedro/Projects/NexusBuilder/bin-int/Debug-linux-x86_64/GLFW/vulkan.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-D_GLFW_X11",
+      "-Iinclude",
+      "-m64",
+      "-O0",
+      "-fPIC",
+      "-g",
+      "-c",
+      "-o",
+      "../../bin-int/Debug-linux-x86_64/GLFW/window.o",
+      "src/window.c"
+    ],
+    "directory": "/home/pedro/Projects/NexusBuilder/lib/glfw",
+    "file": "/home/pedro/Projects/NexusBuilder/lib/glfw/src/window.c",
+    "output": "/home/pedro/Projects/NexusBuilder/bin-int/Debug-linux-x86_64/GLFW/window.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-D_GLFW_X11",
+      "-Iinclude",
+      "-m64",
+      "-O0",
+      "-fPIC",
+      "-g",
+      "-c",
+      "-o",
+      "../../bin-int/Debug-linux-x86_64/GLFW/x11_init.o",
+      "src/x11_init.c"
+    ],
+    "directory": "/home/pedro/Projects/NexusBuilder/lib/glfw",
+    "file": "/home/pedro/Projects/NexusBuilder/lib/glfw/src/x11_init.c",
+    "output": "/home/pedro/Projects/NexusBuilder/bin-int/Debug-linux-x86_64/GLFW/x11_init.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-D_GLFW_X11",
+      "-Iinclude",
+      "-m64",
+      "-O0",
+      "-fPIC",
+      "-g",
+      "-c",
+      "-o",
+      "../../bin-int/Debug-linux-x86_64/GLFW/x11_monitor.o",
+      "src/x11_monitor.c"
+    ],
+    "directory": "/home/pedro/Projects/NexusBuilder/lib/glfw",
+    "file": "/home/pedro/Projects/NexusBuilder/lib/glfw/src/x11_monitor.c",
+    "output": "/home/pedro/Projects/NexusBuilder/bin-int/Debug-linux-x86_64/GLFW/x11_monitor.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-D_GLFW_X11",
+      "-Iinclude",
+      "-m64",
+      "-O0",
+      "-fPIC",
+      "-g",
+      "-c",
+      "-o",
+      "../../bin-int/Debug-linux-x86_64/GLFW/x11_window.o",
+      "src/x11_window.c"
+    ],
+    "directory": "/home/pedro/Projects/NexusBuilder/lib/glfw",
+    "file": "/home/pedro/Projects/NexusBuilder/lib/glfw/src/x11_window.c",
+    "output": "/home/pedro/Projects/NexusBuilder/bin-int/Debug-linux-x86_64/GLFW/x11_window.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-D_GLFW_X11",
+      "-Iinclude",
+      "-m64",
+      "-O0",
+      "-fPIC",
+      "-g",
+      "-c",
+      "-o",
+      "../../bin-int/Debug-linux-x86_64/GLFW/xkb_unicode.o",
+      "src/xkb_unicode.c"
+    ],
+    "directory": "/home/pedro/Projects/NexusBuilder/lib/glfw",
+    "file": "/home/pedro/Projects/NexusBuilder/lib/glfw/src/xkb_unicode.c",
+    "output": "/home/pedro/Projects/NexusBuilder/bin-int/Debug-linux-x86_64/GLFW/xkb_unicode.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-I.",
+      "-Ibackends",
+      "-I../glfw/include",
+      "-m64",
+      "-O0",
+      "-g",
+      "-std=c++17",
+      "-c",
+      "-o",
+      "../../bin-int/Debug-linux-x86_64/ImGui/imgui.o",
+      "imgui.cpp"
+    ],
+    "directory": "/home/pedro/Projects/NexusBuilder/lib/imgui",
+    "file": "/home/pedro/Projects/NexusBuilder/lib/imgui/imgui.cpp",
+    "output": "/home/pedro/Projects/NexusBuilder/bin-int/Debug-linux-x86_64/ImGui/imgui.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-I.",
+      "-Ibackends",
+      "-I../glfw/include",
+      "-m64",
+      "-O0",
+      "-g",
+      "-std=c++17",
+      "-c",
+      "-o",
+      "../../bin-int/Debug-linux-x86_64/ImGui/imgui_demo.o",
+      "imgui_demo.cpp"
+    ],
+    "directory": "/home/pedro/Projects/NexusBuilder/lib/imgui",
+    "file": "/home/pedro/Projects/NexusBuilder/lib/imgui/imgui_demo.cpp",
+    "output": "/home/pedro/Projects/NexusBuilder/bin-int/Debug-linux-x86_64/ImGui/imgui_demo.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-I.",
+      "-Ibackends",
+      "-I../glfw/include",
+      "-m64",
+      "-O0",
+      "-g",
+      "-std=c++17",
+      "-c",
+      "-o",
+      "../../bin-int/Debug-linux-x86_64/ImGui/imgui_draw.o",
+      "imgui_draw.cpp"
+    ],
+    "directory": "/home/pedro/Projects/NexusBuilder/lib/imgui",
+    "file": "/home/pedro/Projects/NexusBuilder/lib/imgui/imgui_draw.cpp",
+    "output": "/home/pedro/Projects/NexusBuilder/bin-int/Debug-linux-x86_64/ImGui/imgui_draw.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-I.",
+      "-Ibackends",
+      "-I../glfw/include",
+      "-m64",
+      "-O0",
+      "-g",
+      "-std=c++17",
+      "-c",
+      "-o",
+      "../../bin-int/Debug-linux-x86_64/ImGui/imgui_impl_glfw.o",
+      "backends/imgui_impl_glfw.cpp"
+    ],
+    "directory": "/home/pedro/Projects/NexusBuilder/lib/imgui",
+    "file": "/home/pedro/Projects/NexusBuilder/lib/imgui/backends/imgui_impl_glfw.cpp",
+    "output": "/home/pedro/Projects/NexusBuilder/bin-int/Debug-linux-x86_64/ImGui/imgui_impl_glfw.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-I.",
+      "-Ibackends",
+      "-I../glfw/include",
+      "-m64",
+      "-O0",
+      "-g",
+      "-std=c++17",
+      "-c",
+      "-o",
+      "../../bin-int/Debug-linux-x86_64/ImGui/imgui_impl_opengl3.o",
+      "backends/imgui_impl_opengl3.cpp"
+    ],
+    "directory": "/home/pedro/Projects/NexusBuilder/lib/imgui",
+    "file": "/home/pedro/Projects/NexusBuilder/lib/imgui/backends/imgui_impl_opengl3.cpp",
+    "output": "/home/pedro/Projects/NexusBuilder/bin-int/Debug-linux-x86_64/ImGui/imgui_impl_opengl3.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-I.",
+      "-Ibackends",
+      "-I../glfw/include",
+      "-m64",
+      "-O0",
+      "-g",
+      "-std=c++17",
+      "-c",
+      "-o",
+      "../../bin-int/Debug-linux-x86_64/ImGui/imgui_tables.o",
+      "imgui_tables.cpp"
+    ],
+    "directory": "/home/pedro/Projects/NexusBuilder/lib/imgui",
+    "file": "/home/pedro/Projects/NexusBuilder/lib/imgui/imgui_tables.cpp",
+    "output": "/home/pedro/Projects/NexusBuilder/bin-int/Debug-linux-x86_64/ImGui/imgui_tables.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-I.",
+      "-Ibackends",
+      "-I../glfw/include",
+      "-m64",
+      "-O0",
+      "-g",
+      "-std=c++17",
+      "-c",
+      "-o",
+      "../../bin-int/Debug-linux-x86_64/ImGui/imgui_widgets.o",
+      "imgui_widgets.cpp"
+    ],
+    "directory": "/home/pedro/Projects/NexusBuilder/lib/imgui",
+    "file": "/home/pedro/Projects/NexusBuilder/lib/imgui/imgui_widgets.cpp",
+    "output": "/home/pedro/Projects/NexusBuilder/bin-int/Debug-linux-x86_64/ImGui/imgui_widgets.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-DDEBUG",
+      "-DPLATFORM_LINUX",
+      "-IInclude",
+      "-Ilib/glfw/include",
+      "-Ilib/imgui",
+      "-Ilib/imgui/backends",
+      "-Ilib/glm",
+      "-IShaders",
+      "-m64",
+      "-O0",
+      "-g",
+      "-std=c++17",
+      "-c",
+      "-o",
+      "bin-int/Debug-linux-x86_64/Botapica/Camera.o",
+      "Source/Camera.cpp"
+    ],
+    "directory": "/home/pedro/Projects/NexusBuilder",
+    "file": "/home/pedro/Projects/NexusBuilder/Source/Camera.cpp",
+    "output": "/home/pedro/Projects/NexusBuilder/bin-int/Debug-linux-x86_64/Botapica/Camera.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-DDEBUG",
+      "-DPLATFORM_LINUX",
+      "-IInclude",
+      "-Ilib/glfw/include",
+      "-Ilib/imgui",
+      "-Ilib/imgui/backends",
+      "-Ilib/glm",
+      "-IShaders",
+      "-m64",
+      "-O0",
+      "-g",
+      "-std=c++17",
+      "-c",
+      "-o",
+      "bin-int/Debug-linux-x86_64/Botapica/Console.o",
+      "Source/Editors/Console.cpp"
+    ],
+    "directory": "/home/pedro/Projects/NexusBuilder",
+    "file": "/home/pedro/Projects/NexusBuilder/Source/Editors/Console.cpp",
+    "output": "/home/pedro/Projects/NexusBuilder/bin-int/Debug-linux-x86_64/Botapica/Console.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-DDEBUG",
+      "-DPLATFORM_LINUX",
+      "-IInclude",
+      "-Ilib/glfw/include",
+      "-Ilib/imgui",
+      "-Ilib/imgui/backends",
+      "-Ilib/glm",
+      "-IShaders",
+      "-m64",
+      "-O0",
+      "-g",
+      "-std=c++17",
+      "-c",
+      "-o",
+      "bin-int/Debug-linux-x86_64/Botapica/Editors.o",
+      "Source/Editors/Editors.cpp"
+    ],
+    "directory": "/home/pedro/Projects/NexusBuilder",
+    "file": "/home/pedro/Projects/NexusBuilder/Source/Editors/Editors.cpp",
+    "output": "/home/pedro/Projects/NexusBuilder/bin-int/Debug-linux-x86_64/Botapica/Editors.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-DDEBUG",
+      "-DPLATFORM_LINUX",
+      "-IInclude",
+      "-Ilib/glfw/include",
+      "-Ilib/imgui",
+      "-Ilib/imgui/backends",
+      "-Ilib/glm",
+      "-IShaders",
+      "-m64",
+      "-O0",
+      "-g",
+      "-std=c++17",
+      "-c",
+      "-o",
+      "bin-int/Debug-linux-x86_64/Botapica/GameObject.o",
+      "Source/GameObject.cpp"
+    ],
+    "directory": "/home/pedro/Projects/NexusBuilder",
+    "file": "/home/pedro/Projects/NexusBuilder/Source/GameObject.cpp",
+    "output": "/home/pedro/Projects/NexusBuilder/bin-int/Debug-linux-x86_64/Botapica/GameObject.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-DDEBUG",
+      "-DPLATFORM_LINUX",
+      "-IInclude",
+      "-Ilib/glfw/include",
+      "-Ilib/imgui",
+      "-Ilib/imgui/backends",
+      "-Ilib/glm",
+      "-IShaders",
+      "-m64",
+      "-O0",
+      "-g",
+      "-std=c++17",
+      "-c",
+      "-o",
+      "bin-int/Debug-linux-x86_64/Botapica/Light.o",
+      "Source/Light.cpp"
+    ],
+    "directory": "/home/pedro/Projects/NexusBuilder",
+    "file": "/home/pedro/Projects/NexusBuilder/Source/Light.cpp",
+    "output": "/home/pedro/Projects/NexusBuilder/bin-int/Debug-linux-x86_64/Botapica/Light.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-DDEBUG",
+      "-DPLATFORM_LINUX",
+      "-IInclude",
+      "-Ilib/glfw/include",
+      "-Ilib/imgui",
+      "-Ilib/imgui/backends",
+      "-Ilib/glm",
+      "-IShaders",
+      "-m64",
+      "-O0",
+      "-g",
+      "-std=c++17",
+      "-c",
+      "-o",
+      "bin-int/Debug-linux-x86_64/Botapica/Material.o",
+      "Source/Material/Material.cpp"
+    ],
+    "directory": "/home/pedro/Projects/NexusBuilder",
+    "file": "/home/pedro/Projects/NexusBuilder/Source/Material/Material.cpp",
+    "output": "/home/pedro/Projects/NexusBuilder/bin-int/Debug-linux-x86_64/Botapica/Material.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-DDEBUG",
+      "-DPLATFORM_LINUX",
+      "-IInclude",
+      "-Ilib/glfw/include",
+      "-Ilib/imgui",
+      "-Ilib/imgui/backends",
+      "-Ilib/glm",
+      "-IShaders",
+      "-m64",
+      "-O0",
+      "-g",
+      "-std=c++17",
+      "-c",
+      "-o",
+      "bin-int/Debug-linux-x86_64/Botapica/Mesh.o",
+      "Source/Mesh.cpp"
+    ],
+    "directory": "/home/pedro/Projects/NexusBuilder",
+    "file": "/home/pedro/Projects/NexusBuilder/Source/Mesh.cpp",
+    "output": "/home/pedro/Projects/NexusBuilder/bin-int/Debug-linux-x86_64/Botapica/Mesh.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-DDEBUG",
+      "-DPLATFORM_LINUX",
+      "-IInclude",
+      "-Ilib/glfw/include",
+      "-Ilib/imgui",
+      "-Ilib/imgui/backends",
+      "-Ilib/glm",
+      "-IShaders",
+      "-m64",
+      "-O0",
+      "-g",
+      "-std=c++17",
+      "-c",
+      "-o",
+      "bin-int/Debug-linux-x86_64/Botapica/Object.o",
+      "Source/Object.cpp"
+    ],
+    "directory": "/home/pedro/Projects/NexusBuilder",
+    "file": "/home/pedro/Projects/NexusBuilder/Source/Object.cpp",
+    "output": "/home/pedro/Projects/NexusBuilder/bin-int/Debug-linux-x86_64/Botapica/Object.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-DDEBUG",
+      "-DPLATFORM_LINUX",
+      "-IInclude",
+      "-Ilib/glfw/include",
+      "-Ilib/imgui",
+      "-Ilib/imgui/backends",
+      "-Ilib/glm",
+      "-IShaders",
+      "-m64",
+      "-O0",
+      "-g",
+      "-std=c++17",
+      "-c",
+      "-o",
+      "bin-int/Debug-linux-x86_64/Botapica/ObjectManager.o",
+      "Source/ObjectManager.cpp"
+    ],
+    "directory": "/home/pedro/Projects/NexusBuilder",
+    "file": "/home/pedro/Projects/NexusBuilder/Source/ObjectManager.cpp",
+    "output": "/home/pedro/Projects/NexusBuilder/bin-int/Debug-linux-x86_64/Botapica/ObjectManager.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-DDEBUG",
+      "-DPLATFORM_LINUX",
+      "-IInclude",
+      "-Ilib/glfw/include",
+      "-Ilib/imgui",
+      "-Ilib/imgui/backends",
+      "-Ilib/glm",
+      "-IShaders",
+      "-m64",
+      "-O0",
+      "-g",
+      "-std=c++17",
+      "-c",
+      "-o",
+      "bin-int/Debug-linux-x86_64/Botapica/Primitives.o",
+      "Source/Primitives.cpp"
+    ],
+    "directory": "/home/pedro/Projects/NexusBuilder",
+    "file": "/home/pedro/Projects/NexusBuilder/Source/Primitives.cpp",
+    "output": "/home/pedro/Projects/NexusBuilder/bin-int/Debug-linux-x86_64/Botapica/Primitives.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-DDEBUG",
+      "-DPLATFORM_LINUX",
+      "-IInclude",
+      "-Ilib/glfw/include",
+      "-Ilib/imgui",
+      "-Ilib/imgui/backends",
+      "-Ilib/glm",
+      "-IShaders",
+      "-m64",
+      "-O0",
+      "-g",
+      "-std=c++17",
+      "-c",
+      "-o",
+      "bin-int/Debug-linux-x86_64/Botapica/Scene.o",
+      "Source/Scene.cpp"
+    ],
+    "directory": "/home/pedro/Projects/NexusBuilder",
+    "file": "/home/pedro/Projects/NexusBuilder/Source/Scene.cpp",
+    "output": "/home/pedro/Projects/NexusBuilder/bin-int/Debug-linux-x86_64/Botapica/Scene.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-DDEBUG",
+      "-DPLATFORM_LINUX",
+      "-IInclude",
+      "-Ilib/glfw/include",
+      "-Ilib/imgui",
+      "-Ilib/imgui/backends",
+      "-Ilib/glm",
+      "-IShaders",
+      "-m64",
+      "-O0",
+      "-g",
+      "-std=c++17",
+      "-c",
+      "-o",
+      "bin-int/Debug-linux-x86_64/Botapica/Shader.o",
+      "Source/Shader.cpp"
+    ],
+    "directory": "/home/pedro/Projects/NexusBuilder",
+    "file": "/home/pedro/Projects/NexusBuilder/Source/Shader.cpp",
+    "output": "/home/pedro/Projects/NexusBuilder/bin-int/Debug-linux-x86_64/Botapica/Shader.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-DDEBUG",
+      "-DPLATFORM_LINUX",
+      "-IInclude",
+      "-Ilib/glfw/include",
+      "-Ilib/imgui",
+      "-Ilib/imgui/backends",
+      "-Ilib/glm",
+      "-IShaders",
+      "-m64",
+      "-O0",
+      "-g",
+      "-std=c++17",
+      "-c",
+      "-o",
+      "bin-int/Debug-linux-x86_64/Botapica/main.o",
+      "Source/main.cpp"
+    ],
+    "directory": "/home/pedro/Projects/NexusBuilder",
+    "file": "/home/pedro/Projects/NexusBuilder/Source/main.cpp",
+    "output": "/home/pedro/Projects/NexusBuilder/bin-int/Debug-linux-x86_64/Botapica/main.o"
+  }
+]

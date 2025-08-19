@@ -53,6 +53,9 @@ Scene::~Scene() {
 	// Clear all mesh renderers
 	m_meshRenderers.clear();
 	
+	// Clear lights vector to ensure proper cleanup
+	m_lights.clear();
+	
 	BOTAPICA_LOG_INFO("Scene destroyed");
 }
 
