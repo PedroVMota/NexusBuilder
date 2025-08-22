@@ -1,4 +1,6 @@
 #include "Engine.h"
+#include "GUIWorkspace.h"
+
 
 Engine::Engine() : window(nullptr), editor(nullptr) {}
 
@@ -24,7 +26,9 @@ int Engine::Initialize() {
 	LogGPUInfo();
 	InitializeImGui();
 	
-	editor = new Editor();
+	// Editor *editor = new Editor();
+	//
+	this->editor = GUIWorkspace::create();
 	
 	BOTAPICA_LOG_INFO("Engine initialized successfully");
 	return 0;
@@ -151,15 +155,50 @@ void Engine::SetupGLFWHints() {
 #endif
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+bool Engine::renderWorkspaceManager(){
+  glfwPollEvents();
+  ImGui_ImplOpenGL3_NewFrame();
+  ImGui_ImplGlfw_NewFrame();
+  ImGui::NewFrame();
+  editor->render();
+  ImGui::Render();
+  ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+  glfwSwapBuffers(window);
+  return false;
+}
+
 void Engine::MainLoop() {
 	while (!glfwWindowShouldClose(window)) {
-		glfwPollEvents();
-		ImGui_ImplOpenGL3_NewFrame();
-		ImGui_ImplGlfw_NewFrame();
-		ImGui::NewFrame();
-		editor->Render();
-		ImGui::Render();
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-		glfwSwapBuffers(window);
+
+		switch (this->state) {
+			case CHOOSING_WORKSPACE: 
+				this->renderWorkspaceManager();
+			break;
+
+
+			case RUNNING:
+				glfwPollEvents();
+				ImGui_ImplOpenGL3_NewFrame();
+				ImGui_ImplGlfw_NewFrame();
+				ImGui::NewFrame();
+				editor->render();
+				ImGui::Render();
+				ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+				glfwSwapBuffers(window);
+			break;
+		
+		}
 	}
 }

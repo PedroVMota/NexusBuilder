@@ -1,13 +1,18 @@
 #include "Engine.h"
+#include "Workspace.h"
 
-int main()
-{
+int main(int ac, char **av) {
 
-	Engine engine;
-	
-	if (engine.Initialize() != 0) {
-		return -1;
-	}
-	
-	return engine.Run();
+  // Workspace works = Workspace(av[0]);
+  //
+  //
+  //
+  // works.loadWorkspace();
+  Engine engine;
+
+  if (engine.Initialize() != 0) {
+    return -1;
+  }
+
+  return engine.Run();
 }

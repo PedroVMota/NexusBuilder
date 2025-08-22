@@ -1,7 +1,16 @@
 #pragma once
 
 
-#include "Editor.h"
+// #include "Editor.h"
+#include <memory>
+#include "Workspace.h"
+
+#include "Interfaces/GUIView.h"
+
+enum EngineState {
+	CHOOSING_WORKSPACE = -1,
+	RUNNING
+};
 
 class Engine{
 public:
@@ -14,8 +23,14 @@ public:
 
 private:
 	GLFWwindow* window;
-	Editor* editor;
+	GUIView* editor;
+	EngineState state = CHOOSING_WORKSPACE;
 
+	std::shared_ptr<Workspace> spaces;
+
+
+
+	bool renderWorkspaceManager();
 	
 	bool InitializeGLFW();
 	bool CreateWindow();
