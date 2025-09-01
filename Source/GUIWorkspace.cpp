@@ -62,12 +62,137 @@ void GUIWorkspace::render() const {
         // Begin the dockspace window - THIS IS CRITICAL!
         ImGui::Begin("DockSpace", nullptr, window_flags);
         
+        // Menu bar
+        if (ImGui::BeginMenuBar()) {
+            if (ImGui::BeginMenu("File")) {
+                if (ImGui::MenuItem("New")) {
+                    // Handle new file
+                }
+                if (ImGui::MenuItem("Open")) {
+                    // Handle open file
+                }
+                if (ImGui::MenuItem("Save")) {
+                    // Handle save file
+                }
+                ImGui::Separator();
+                if (ImGui::MenuItem("Exit")) {
+                    // Handle exit
+                }
+                ImGui::EndMenu();
+            }
+            if (ImGui::BeginMenu("View")) {
+                if (ImGui::MenuItem("Mode One")) {
+                    // Switch to mode one
+                }
+                if (ImGui::MenuItem("Mode Two")) {
+                    // Switch to mode two
+                }
+                ImGui::EndMenu();
+            }
+            ImGui::EndMenuBar();
+        }
+        
+        // Get available space
+        ImVec2 available_size = ImGui::GetContentRegionAvail();
+        
+        // Main workspace content with styling
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(20.0f, 20.0f));
+        ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8.0f, 8.0f));
+        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.9f, 0.9f, 0.9f, 1.0f));
+        
+        ImGui::Columns(3, "WorkspaceColumns", false);
+        ImGui::SetColumnWidth(0, available_size.x * 0.3f);  // 30% for recent projects
+        ImGui::SetColumnWidth(1, available_size.x * 0.4f);  // 40% for templates
+        
+        // Left panel - Recent Projects
+        ImGui::Text("Recent Projects");
+        ImGui::Separator();
+        
+        // Project list with icons and details
+        const char* projects[] = {"MyGameEngine", "WebApp_2024", "AI_ChatBot", "MobileGame", "DataAnalyzer"};
+        const char* paths[] = {"/Users/dev/MyGameEngine", "/Users/dev/WebApp_2024", "/Users/dev/AI_ChatBot", "/Users/dev/MobileGame", "/Users/dev/DataAnalyzer"};
+        const char* dates[] = {"2 days ago", "1 week ago", "2 weeks ago", "1 month ago", "2 months ago"};
+        
+        for(int i = 0; i < 5; i++) {
+            ImGui::PushID(i);
+            if(ImGui::Selectable(projects[i], false, ImGuiSelectableFlags_AllowDoubleClick)) {
+                if(ImGui::IsMouseDoubleClicked(0)) {
+                    // Open project
+                }
+            }
+            ImGui::Text("  %s", paths[i]);
+            ImGui::SameLine();
+            ImGui::TextDisabled("(%s)", dates[i]);
+            ImGui::Spacing();
+            ImGui::PopID();
+        }
+        
+        ImGui::NextColumn();
+        
+        // Middle panel - Project Templates
+        ImGui::Text("Create New Project");
+        ImGui::Separator();
+        
+        // Template categories
+        if(ImGui::TreeNodeEx("Game Development", ImGuiTreeNodeFlags_DefaultOpen)) {
+            if(ImGui::Selectable("2D Platformer")) { /* Create 2D game */ }
+            if(ImGui::Selectable("3D Adventure")) { /* Create 3D game */ }
+            if(ImGui::Selectable("Puzzle Game")) { /* Create puzzle game */ }
+            ImGui::TreePop();
+        }
+        
+        if(ImGui::TreeNodeEx("Applications", ImGuiTreeNodeFlags_DefaultOpen)) {
+            if(ImGui::Selectable("Desktop App")) { /* Create desktop app */ }
+            if(ImGui::Selectable("Web Application")) { /* Create web app */ }
+            if(ImGui::Selectable("Mobile App")) { /* Create mobile app */ }
+            ImGui::TreePop();
+        }
+        
+        if(ImGui::TreeNodeEx("Tools & Utilities", ImGuiTreeNodeFlags_DefaultOpen)) {
+            if(ImGui::Selectable("Console Tool")) { /* Create console tool */ }
+            if(ImGui::Selectable("Library/Framework")) { /* Create library */ }
+            if(ImGui::Selectable("Plugin/Extension")) { /* Create plugin */ }
+            ImGui::TreePop();
+        }
+        
+        ImGui::NextColumn();
+        
+        // Right panel - Actions and Info
+        ImGui::Text("Quick Actions");
+        ImGui::Separator();
+        
+        if(ImGui::Button("New Project", ImVec2(120, 30))) {
+            // Show new project dialog
+        }
+        
+        if(ImGui::Button("Open Project", ImVec2(120, 30))) {
+            // Show file browser
+        }
+        
+        if(ImGui::Button("Clone Repository", ImVec2(120, 30))) {
+            // Show git clone dialog
+        }
+        
+        ImGui::Spacing();
+        ImGui::Separator();
+        ImGui::Spacing();
+        
+        // Recent activity section
+        ImGui::Text("Recent Activity");
+        ImGui::Separator();
+        ImGui::BulletText("Opened MyGameEngine");
+        ImGui::BulletText("Created new branch 'feature-ui'");
+        ImGui::BulletText("Committed 5 files");
+        ImGui::BulletText("Built project successfully");
+        
+        ImGui::Columns(1);
+        
+        // Pop workspace styling
+        ImGui::PopStyleColor();
+        ImGui::PopStyleVar(2);
+        
         // Pop style vars after Begin
         ImGui::PopStyleVar(3);
-        
-        // Create the dockspace
-        ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
-        ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_None);
         
         // End the window - THIS IS CRITICAL!
         ImGui::End();

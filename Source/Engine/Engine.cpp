@@ -168,37 +168,24 @@ void Engine::SetupGLFWHints() {
 
 
 bool Engine::renderWorkspaceManager(){
-  glfwPollEvents();
-  ImGui_ImplOpenGL3_NewFrame();
-  ImGui_ImplGlfw_NewFrame();
-  ImGui::NewFrame();
-  editor->render();
-  ImGui::Render();
-  ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-  glfwSwapBuffers(window);
-  return false;
+	this->editor->render();
+	return false;
 }
 
 void Engine::MainLoop() {
 	while (!glfwWindowShouldClose(window)) {
-
-		switch (this->state) {
-			case CHOOSING_WORKSPACE: 
-				this->renderWorkspaceManager();
-			break;
-
-
-			case RUNNING:
-				glfwPollEvents();
-				ImGui_ImplOpenGL3_NewFrame();
-				ImGui_ImplGlfw_NewFrame();
-				ImGui::NewFrame();
-				editor->render();
-				ImGui::Render();
-				ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-				glfwSwapBuffers(window);
-			break;
-		
+		glfwPollEvents();
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+		if(this->state == CHOOSING_WORKSPACE){
+			this->renderWorkspaceManager();
 		}
+		else{
+			editor->render();
+		}
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+		glfwSwapBuffers(window);
 	}
 }
