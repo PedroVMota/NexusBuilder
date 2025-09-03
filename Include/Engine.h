@@ -4,7 +4,6 @@
 // #include "Editor.h"
 #include <memory>
 #include "Workspace.h"
-
 #include "Interfaces/GUIView.h"
 
 enum EngineState {
