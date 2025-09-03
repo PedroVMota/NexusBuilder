@@ -9,46 +9,35 @@
 #include <fstream>
 
 
+class Project {
+public:
+	std::string projectName;
+	std::string path;
+	std::string version;
 
-struct FileEnviroment {
-	std::filesystem::path filepath;
-	std::shared_ptr<std::ofstream> file;
-	std::shared_ptr<std::string> content;
-
-	FileEnviroment &operator=(const FileEnviroment &o){
-		this->filepath = o.filepath;
-		this->file = o.file;
-		this->content = o.content;
-		return *this;
-	}
-
-	FileEnviroment() {}
-	~FileEnviroment() {
-		BOTAPICA_LOG_INFO("Cloding File Enviroment");
-		this->filepath.clear();
+	Project(const std::string& name, const std::string& path, const std::string& version)
+		: projectName(name), path(path), version(version) {
 	}
 };
 
 class Workspace {
-
 private: 
-	std::map<std::string, FileEnviroment> _opened_files;
-
 	std::string _config_file;
 	std::string _workspacelist_file;
 	std::string getDataFolder(const char *) const;
-
+	std::vector<Project> _projects; 
 
 public:
-	Workspace(const char *);
+	Workspace(const char*);
 	~Workspace();
 
-	Workspace(const Workspace &) = delete;
-	Workspace &operator=(const Workspace &) = delete;
+	static std::vector<std::string> getLines(const char* file);
+
 
 
 	void loadWorkspace();
 	void closeWorkspace();
 
-	FileEnviroment load(const std::string &);
+	const std::vector<Project>& getProjects() const;
+
 };

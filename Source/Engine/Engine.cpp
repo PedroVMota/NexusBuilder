@@ -2,7 +2,9 @@
 #include "GUIWorkspace.h"
 
 
-Engine::Engine() : window(nullptr), editor(nullptr) {}
+Engine::Engine() : window(nullptr), editor(nullptr), state(CHOOSING_WORKSPACE)  {
+	
+}
 
 Engine::~Engine() {
 	Shutdown();

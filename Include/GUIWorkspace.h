@@ -2,7 +2,7 @@
 
 
 #include "Interfaces/GUIView.h"
-
+#include "Workspace.h"
 
 
 class GUIWorkspace : public GUIView{
@@ -10,6 +10,7 @@ class GUIWorkspace : public GUIView{
 
 private: 
 	ImGuiIO  io;
+	std::shared_ptr<Workspace> _spaceManager;
 
 public: 
 

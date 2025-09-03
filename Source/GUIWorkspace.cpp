@@ -5,6 +5,13 @@
 
 GUIWorkspace::GUIWorkspace() : GUIView() {
     // Empty constructor - no ImGui operations here
+    this->_spaceManager = std::make_shared<Workspace>(PROCESS_NAME);
+    this->_spaceManager->loadWorkspace();
+
+    std::vector<Project> _project = this->_spaceManager->getProjects();
+    for (const auto& project : _project) {
+		std::cout << "Memory Loss: " << project.projectName << " at " << project.path << " version " << project.version << std::endl;
+    }
 }
 
 GUIWorkspace::GUIWorkspace(const GUIWorkspace &other) : GUIView() {
@@ -30,7 +37,7 @@ void GUIWorkspace::start() {
 }
 
 void GUIWorkspace::render() const {
-    BOTAPICA_LOG_INFO("GUIWorkspace View Rendering");
+    //BOTAPICA_LOG_INFO("GUIWorkspace View Rendering");
     
     // Get IO each frame
     ImGuiIO& io = ImGui::GetIO();
@@ -54,7 +61,6 @@ void GUIWorkspace::render() const {
         
         // Set background to black
         ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 1.0f));
-        
         ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
@@ -93,6 +99,12 @@ void GUIWorkspace::render() const {
         }
         
         // Get available space
+
+
+        const std::vector<Project> &projects = this->_spaceManager->getProjects();
+
+
+
         ImVec2 available_size = ImGui::GetContentRegionAvail();
         
         // Main workspace content with styling
@@ -100,34 +112,30 @@ void GUIWorkspace::render() const {
         ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8.0f, 8.0f));
         ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.9f, 0.9f, 0.9f, 1.0f));
         
-        ImGui::Columns(3, "WorkspaceColumns", false);
+        ImGui::Columns(projects.size() > 0 ? 3 : 2, "WorkspaceColumns", false);
         ImGui::SetColumnWidth(0, available_size.x * 0.3f);  // 30% for recent projects
         ImGui::SetColumnWidth(1, available_size.x * 0.4f);  // 40% for templates
-        
-        // Left panel - Recent Projects
-        ImGui::Text("Recent Projects");
-        ImGui::Separator();
-        
-        // Project list with icons and details
-        const char* projects[] = {"MyGameEngine", "WebApp_2024", "AI_ChatBot", "MobileGame", "DataAnalyzer"};
-        const char* paths[] = {"/Users/dev/MyGameEngine", "/Users/dev/WebApp_2024", "/Users/dev/AI_ChatBot", "/Users/dev/MobileGame", "/Users/dev/DataAnalyzer"};
-        const char* dates[] = {"2 days ago", "1 week ago", "2 weeks ago", "1 month ago", "2 months ago"};
-        
-        for(int i = 0; i < 5; i++) {
-            ImGui::PushID(i);
-            if(ImGui::Selectable(projects[i], false, ImGuiSelectableFlags_AllowDoubleClick)) {
-                if(ImGui::IsMouseDoubleClicked(0)) {
-                    // Open project
+
+
+        if(projects.size() > 0) {
+            ImGui::Text("Recent Projects");
+            ImGui::Separator();
+            for (size_t i = 0; i < projects.size(); i++) {
+                ImGui::PushID(static_cast<int>(i));
+                if (ImGui::Selectable(projects[i].projectName.c_str(), false, ImGuiSelectableFlags_AllowDoubleClick)) {
+                    if (ImGui::IsMouseDoubleClicked(0)) {
+                        // Open project
+                    }
                 }
+                ImGui::Text("  %s", projects[i].path.c_str());
+                ImGui::SameLine();
+                ImGui::TextDisabled("(%s)", projects[i].version.c_str());
+                ImGui::Spacing();
+                ImGui::PopID();
             }
-            ImGui::Text("  %s", paths[i]);
-            ImGui::SameLine();
-            ImGui::TextDisabled("(%s)", dates[i]);
-            ImGui::Spacing();
-            ImGui::PopID();
+            ImGui::NextColumn();
         }
-        
-        ImGui::NextColumn();
+ 
         
         // Middle panel - Project Templates
         ImGui::Text("Create New Project");

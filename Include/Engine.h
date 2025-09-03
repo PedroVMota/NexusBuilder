@@ -24,14 +24,12 @@ public:
 private:
 	GLFWwindow* window;
 	GUIView* editor;
-	EngineState state = CHOOSING_WORKSPACE;
-
-	std::shared_ptr<Workspace> spaces;
+	EngineState state;
+	std::vector<std::string> _createdWorksSpaces;
 
 
 
 	bool renderWorkspaceManager();
-	
 	bool InitializeGLFW();
 	bool CreateWindow();
 	bool InitializeOpenGL();
