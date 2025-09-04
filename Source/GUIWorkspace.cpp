@@ -5,10 +5,8 @@
 
 void GUIWorkspace::renderHeaderSection()
 {
- 
+
     if (ImGui::BeginMenuBar()) {
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(10, 10));
         if (ImGui::BeginMenu("File")) {
             if (ImGui::MenuItem("New")) {
                 // Handle new file
@@ -34,18 +32,13 @@ void GUIWorkspace::renderHeaderSection()
             }
             ImGui::EndMenu();
         }
-        ImGui::PopStyleVar(2);
-
         ImGui::EndMenuBar();
-
     }
+
 }
 
-void GUIWorkspace::renderWorkspaceSection(const std::vector<Project> &projects)
+void GUIWorkspace::renderWorkspaceSection(const std::vector<Project>& projects)
 {
-    
-
-
     if (projects.size() > 0) {
         ImGui::Text("Recent Projects");
         ImGui::Separator();
@@ -62,7 +55,6 @@ void GUIWorkspace::renderWorkspaceSection(const std::vector<Project> &projects)
             ImGui::Spacing();
             ImGui::PopID();
         }
-        ImGui::NextColumn();
     }
 }
 
@@ -74,38 +66,36 @@ void GUIWorkspace::renderButtonSection()
 {
     // Right panel - Actions and Info
     ImGui::Text("Quick Actions");
-    ImGui::Separator();
 
     ImVec2 size = ImGui::GetContentRegionAvail();
-    if (ImGui::Button("New Project", ImVec2(size[0], 30))) {
+    if (ImGui::Button("New Project", ImVec2(size.x, 30))) {
         // Show new project dialog
     }
 
-    if (ImGui::Button("Open Project", ImVec2(size[0], 30))) {
+    if (ImGui::Button("Open Project", ImVec2(size.x, 30))) {
         // Show file browser
     }
 
-    if (ImGui::Button("Clone Repository", ImVec2(size[0], 30))) {
+    if (ImGui::Button("Clone Repository", ImVec2(size.x, 30))) {
         // Show git clone dialog
     }
 }
 
 GUIWorkspace::GUIWorkspace() : GUIView() {
-    // Empty constructor - no ImGui operations here
     this->_spaceManager = std::make_shared<Workspace>(PROCESS_NAME);
     this->_spaceManager->loadWorkspace();
 
     std::vector<Project> _project = this->_spaceManager->getProjects();
     for (const auto& project : _project) {
-		std::cout << "Memory Loss: " << project.projectName << " at " << project.path << " version " << project.version << std::endl;
+        std::cout << "Memory Loss: " << project.projectName << " at " << project.path << " version " << project.version << std::endl;
     }
 }
 
-GUIWorkspace::GUIWorkspace(const GUIWorkspace &other) : GUIView() {
+GUIWorkspace::GUIWorkspace(const GUIWorkspace& other) : GUIView() {
     // Copy constructor
 }
 
-GUIWorkspace &GUIWorkspace::operator=(const GUIWorkspace &other) {
+GUIWorkspace& GUIWorkspace::operator=(const GUIWorkspace& other) {
     // Assignment operator
     return *this;
 }
@@ -114,82 +104,86 @@ GUIWorkspace::~GUIWorkspace() {
     // Destructor
 }
 
-GUIView *GUIWorkspace::create() {
+GUIView* GUIWorkspace::create() {
     return new GUIWorkspace();
 }
 
 void GUIWorkspace::start() {
     BOTAPICA_LOG_INFO("GUIWorkspace starting");
-    // No need to do anything special here since ImGui is already initialized in Engine
 }
 
 void GUIWorkspace::render() {
-    //BOTAPICA_LOG_INFO("GUIWorkspace View Rendering");
-    
-    // Get IO each frame
     ImGuiIO& io = ImGui::GetIO();
-    
-    // Set background to black
+
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
-    // Create dockspace if docking is enabled
+
     if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable) {
         ImGuiViewport* viewport = ImGui::GetMainViewport();
-        
+
         ImGui::SetNextWindowPos(viewport->WorkPos);
         ImGui::SetNextWindowSize(viewport->WorkSize);
         ImGui::SetNextWindowViewport(viewport->ID);
-        
+
         ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
         window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse;
         window_flags |= ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
         window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
-        
-        // Set background to black
-        ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 1.0f));
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 
-        // Begin the dockspace window - THIS IS CRITICAL!
+        ImGui::PushStyleColor(ImGuiCol_MenuBarBg, ImVec4(0.0f, 0.0f, 0.0f, 1.0f));
         ImGui::Begin("DockSpace", nullptr, window_flags);
-        
-        // Menu bar
+
+        // Render menu bar first
         this->renderHeaderSection();
-        // Get available space
 
-        const std::vector<Project>& projects = this->_spaceManager->getProjects();
+        // Get available space AFTER menu bar
         ImVec2 available_size = ImGui::GetContentRegionAvail();
-        // Main workspace content with styling
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(20.0f, 20.0f));
-        ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8.0f, 8.0f));
-        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.9f, 0.9f, 0.9f, 1.0f));
+        ImVec2 MainSpace = ImVec2(0, available_size.y * 0.8f);
 
-        ImGui::Columns(2, "WorkspaceColumns", false);
-        ImGui::SetColumnWidth(0, available_size.x * 0.8f);  // 30% for recent projects
-        ImGui::SetColumnWidth(1, available_size.x * 0.4f);  // 40% for templates
-        if(!projects.size())
-        {
-            ImGui::Text("No Recent Projects");
+        // Main content area (80% of height)
+        if (ImGui::BeginChild("MainArea", MainSpace, false)) {
+            ImGui::Columns(2, "mycolumns2", false);
+            ImGui::SetColumnWidth(0, available_size.x * 0.6f);  // Fixed: don't exceed 100%
+            ImGui::SetColumnWidth(1, available_size.x * 0.4f);
+
+            // Projects column
+            if (ImGui::BeginChild("ProjectsScrollArea", ImVec2(0, 0), false)) {
+                if (this->_spaceManager->getProjects().size() > 0)
+                    this->renderWorkspaceSection(this->_spaceManager->getProjects());
+            }
+            ImGui::EndChild();
+
             ImGui::NextColumn();
+            this->renderButtonSection();
         }
-        else
-        {
-            this->renderWorkspaceSection(projects);
+        ImGui::EndChild();
+
+        // Bottom area (remaining 20% of height) - your buttons go here
+        // Add your bottom-snapped elements here
+
+        if (ImGui::BeginChild("BottomArea", ImVec2(0, 0), false)) {
+            ImVec2 AvailableSpace = ImGui::GetContentRegionAvail(); // Missing semicolon
+
+            ImGui::Columns(3, "bottomcolumns", false);
+
+            // Calculate button width for each column
+            ImVec2 buttonSize = ImVec2(AvailableSpace.x / 3.0f - 10.0f, AvailableSpace.y); // Subtract padding
+
+            ImGui::Button("Report Issue", buttonSize);
+            ImGui::NextColumn(); // Move to next column
+            ImGui::Button("Button 2", buttonSize);
+            ImGui::NextColumn();
+            ImGui::Button("Button 3", buttonSize);
+
+            ImGui::Columns(1); // Reset columns
+            ImGui::EndChild();
         }
-        
-        this->renderButtonSection();
-        
+
         ImGui::PopStyleColor();
-        ImGui::PopStyleVar(5);
         ImGui::End();
-        ImGui::PopStyleColor();
     }
 }
 
 void GUIWorkspace::destroy() {
     BOTAPICA_LOG_INFO("GUIWorkspace destroying");
-    // No special cleanup needed here
 }
-
