@@ -1,8 +1,8 @@
 #include "Engine.h"
-#include "GUIWorkspace.h"
+#include "Screens/GUIWorkspace.h"
 
 
-Engine::Engine() : window(nullptr), editor(nullptr), state(CHOOSING_WORKSPACE)  {
+Engine::Engine() : window(nullptr), editor(nullptr), state(RUNNING)  {
 	
 }
 

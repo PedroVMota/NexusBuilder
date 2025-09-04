@@ -13,7 +13,7 @@ class GUIView {
 public:
 	virtual ~GUIView() {}
 	virtual void start()  = 0;
-	virtual void render() const  = 0;
+	virtual void render()  = 0;
 	virtual void destroy() = 0;
 
 

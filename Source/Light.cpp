@@ -1,4 +1,4 @@
-#include "../Include/Light.h"
+#include "Light.h"
 #include <algorithm>
 #include <limits>
 #include <cmath>

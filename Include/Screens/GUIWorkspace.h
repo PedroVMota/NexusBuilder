@@ -12,14 +12,19 @@ private:
 	ImGuiIO  io;
 	std::shared_ptr<Workspace> _spaceManager;
 
-public: 
+
+	void renderTemplateSection();
+	void renderButtonSection();
+	void renderWorkspaceSection(const std::vector<Project>&);
+	void renderHeaderSection();
+public:
 
 	GUIWorkspace();
 	GUIWorkspace(const GUIWorkspace &);
 	GUIWorkspace &operator=(const GUIWorkspace &);
 	virtual ~GUIWorkspace();
 
-	void render() const;
+	void render();
 	void destroy();
 	void start();
 

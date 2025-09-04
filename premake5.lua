@@ -174,15 +174,16 @@ objdir("bin-int/" .. outputdir .. "/%{prj.name}")
 targetname("NexusBuilder")
 
 files({
-	"Source/**.h",
 	"Source/**.cpp",
 	"Source/**/*.cpp",
+	"Include/*.h",
 	"Include/**.h",
 	"Shaders/**",
 })
 
 includedirs({
 	"Include",
+	"Include/**",
 	"lib/glfw/include",
 	"lib/imgui",
 	"lib/imgui/backends",
