@@ -5,7 +5,10 @@
 
 void GUIWorkspace::renderHeaderSection()
 {
+ 
     if (ImGui::BeginMenuBar()) {
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(10, 10));
         if (ImGui::BeginMenu("File")) {
             if (ImGui::MenuItem("New")) {
                 // Handle new file
@@ -31,7 +34,10 @@ void GUIWorkspace::renderHeaderSection()
             }
             ImGui::EndMenu();
         }
+        ImGui::PopStyleVar(2);
+
         ImGui::EndMenuBar();
+
     }
 }
 
@@ -47,7 +53,7 @@ void GUIWorkspace::renderWorkspaceSection(const std::vector<Project> &projects)
             ImGui::PushID(static_cast<int>(i));
             if (ImGui::Selectable(projects[i].projectName.c_str(), false, ImGuiSelectableFlags_AllowDoubleClick)) {
                 if (ImGui::IsMouseDoubleClicked(0)) {
-                    // Open project
+                    // TODO OPEN THE PROJECT
                 }
             }
             ImGui::Text("  %s", projects[i].path.c_str());
@@ -66,6 +72,22 @@ void GUIWorkspace::renderTemplateSection()
 
 void GUIWorkspace::renderButtonSection()
 {
+    // Right panel - Actions and Info
+    ImGui::Text("Quick Actions");
+    ImGui::Separator();
+
+    ImVec2 size = ImGui::GetContentRegionAvail();
+    if (ImGui::Button("New Project", ImVec2(size[0], 30))) {
+        // Show new project dialog
+    }
+
+    if (ImGui::Button("Open Project", ImVec2(size[0], 30))) {
+        // Show file browser
+    }
+
+    if (ImGui::Button("Clone Repository", ImVec2(size[0], 30))) {
+        // Show git clone dialog
+    }
 }
 
 GUIWorkspace::GUIWorkspace() : GUIView() {
@@ -144,85 +166,24 @@ void GUIWorkspace::render() {
         ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8.0f, 8.0f));
         ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.9f, 0.9f, 0.9f, 1.0f));
 
-        ImGui::Columns(projects.size() > 0 ? 3 : 2, "WorkspaceColumns", false);
-        ImGui::SetColumnWidth(0, available_size.x * 0.3f);  // 30% for recent projects
+        ImGui::Columns(2, "WorkspaceColumns", false);
+        ImGui::SetColumnWidth(0, available_size.x * 0.8f);  // 30% for recent projects
         ImGui::SetColumnWidth(1, available_size.x * 0.4f);  // 40% for templates
-
-
-        this->renderWorkspaceSection(projects);
-
-        
- 
-        
-        //// Middle panel - Project Templates
-        //ImGui::Text("Create New Project");
-        //ImGui::Separator();
-        //
-        //// Template categories
-        //if(ImGui::TreeNodeEx("Game Development", ImGuiTreeNodeFlags_DefaultOpen)) {
-        //    if(ImGui::Selectable("2D Platformer")) { /* Create 2D game */ }
-        //    if(ImGui::Selectable("3D Adventure")) { /* Create 3D game */ }
-        //    if(ImGui::Selectable("Puzzle Game")) { /* Create puzzle game */ }
-        //    ImGui::TreePop();
-        //}
-        //
-        //if(ImGui::TreeNodeEx("Applications", ImGuiTreeNodeFlags_DefaultOpen)) {
-        //    if(ImGui::Selectable("Desktop App")) { /* Create desktop app */ }
-        //    if(ImGui::Selectable("Web Application")) { /* Create web app */ }
-        //    if(ImGui::Selectable("Mobile App")) { /* Create mobile app */ }
-        //    ImGui::TreePop();
-        //}
-        //
-        //if(ImGui::TreeNodeEx("Tools & Utilities", ImGuiTreeNodeFlags_DefaultOpen)) {
-        //    if(ImGui::Selectable("Console Tool")) { /* Create console tool */ }
-        //    if(ImGui::Selectable("Library/Framework")) { /* Create library */ }
-        //    if(ImGui::Selectable("Plugin/Extension")) { /* Create plugin */ }
-        //    ImGui::TreePop();
-        //}
-        //
-        //ImGui::NextColumn();
-        
-        // Right panel - Actions and Info
-        ImGui::Text("Quick Actions");
-        ImGui::Separator();
-        
-        if(ImGui::Button("New Project", ImVec2(120, 30))) {
-            // Show new project dialog
+        if(!projects.size())
+        {
+            ImGui::Text("No Recent Projects");
+            ImGui::NextColumn();
+        }
+        else
+        {
+            this->renderWorkspaceSection(projects);
         }
         
-        if(ImGui::Button("Open Project", ImVec2(120, 30))) {
-            // Show file browser
-        }
+        this->renderButtonSection();
         
-        if(ImGui::Button("Clone Repository", ImVec2(120, 30))) {
-            // Show git clone dialog
-        }
-        
-        ImGui::Spacing();
-        ImGui::Separator();
-        ImGui::Spacing();
-        
-        // Recent activity section
-        ImGui::Text("Recent Activity");
-        ImGui::Separator();
-        ImGui::BulletText("Opened MyGameEngine");
-        ImGui::BulletText("Created new branch 'feature-ui'");
-        ImGui::BulletText("Committed 5 files");
-        ImGui::BulletText("Built project successfully");
-        
-        ImGui::Columns(1);
-        
-        // Pop workspace styling
         ImGui::PopStyleColor();
-        ImGui::PopStyleVar(2);
-        
-        // Pop style vars after Begin
-        ImGui::PopStyleVar(3);
-        
-        // End the window - THIS IS CRITICAL!
+        ImGui::PopStyleVar(5);
         ImGui::End();
-        
-        // Pop style color
         ImGui::PopStyleColor();
     }
 }
