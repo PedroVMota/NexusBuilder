@@ -3,6 +3,7 @@
 #include "imgui.h"
 #include "main.h"
 
+
 void GUIWorkspace::renderHeaderSection()
 {
 
@@ -19,7 +20,8 @@ void GUIWorkspace::renderHeaderSection()
             }
             ImGui::Separator();
             if (ImGui::MenuItem("Exit")) {
-                // Handle exit
+                std::cout << "Exit Button Being pressed\n";
+                this->engine->setRuning(CLOSE);
             }
             ImGui::EndMenu();
         }
@@ -81,14 +83,12 @@ void GUIWorkspace::renderButtonSection()
     }
 }
 
-GUIWorkspace::GUIWorkspace() : GUIView() {
+GUIWorkspace::GUIWorkspace(Engine* _engine_ptr) : GUIView() {
     this->_spaceManager = std::make_shared<Workspace>(PROCESS_NAME);
     this->_spaceManager->loadWorkspace();
+    this->engine = _engine_ptr;
 
     std::vector<Project> _project = this->_spaceManager->getProjects();
-    for (const auto& project : _project) {
-        std::cout << "Memory Loss: " << project.projectName << " at " << project.path << " version " << project.version << std::endl;
-    }
 }
 
 GUIWorkspace::GUIWorkspace(const GUIWorkspace& other) : GUIView() {
@@ -104,8 +104,8 @@ GUIWorkspace::~GUIWorkspace() {
     // Destructor
 }
 
-GUIView* GUIWorkspace::create() {
-    return new GUIWorkspace();
+GUIView* GUIWorkspace::create(Engine * _ptr) {
+    return new GUIWorkspace(_ptr);
 }
 
 void GUIWorkspace::start() {

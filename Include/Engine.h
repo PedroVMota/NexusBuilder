@@ -8,18 +8,22 @@
 
 enum EngineState {
 	CHOOSING_WORKSPACE = -1,
-	RUNNING
+	RUNNING,
+	CLOSE
 };
 
 class Engine{
 public:
 	Engine();
+	Engine(const Engine&);
 	~Engine();
 	
 	int Initialize();
 	int Run();
 	void Shutdown();
 
+
+	void setRuning(EngineState);
 private:
 	GLFWwindow* window;
 	GUIView* editor;
