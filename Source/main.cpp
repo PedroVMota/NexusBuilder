@@ -20,7 +20,6 @@ int main(int ac, char **av) {
     #endif
 #endif
 
-        (void)getchar();
 
     Engine* engine = new Engine();
 
@@ -41,6 +40,5 @@ int main(int ac, char **av) {
   }
 #endif
 #endif
-  (void)getchar();
   return res;
 }

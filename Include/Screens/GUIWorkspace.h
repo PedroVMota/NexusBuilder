@@ -4,7 +4,7 @@
 #include "Interfaces/GUIView.h"
 #include "Workspace.h"
 #include "Engine.h"
-
+#include <GLFW/glfw3.h>
 
 class GUIWorkspace : public GUIView{
 
@@ -19,6 +19,13 @@ private:
 	void renderButtonSection();
 	void renderWorkspaceSection(const std::vector<Project>&);
 	void renderHeaderSection();
+
+
+
+	GUIView *view = NULL;
+	unsigned int _subWindowsLength = NULL;
+
+	
 
 
 

@@ -1,14 +1,10 @@
 #include "Workspace.h"
-#include "main.h"
 #include <cstring>
 #include <filesystem>
 #include <fstream>
-#include <iostream>
-#include <memory>
 #include <stdexcept>
 #include <string>
-#include <utility>
-
+#include <iostream>
 namespace fs = std::filesystem;
 
 
@@ -16,30 +12,29 @@ const std::vector<Project>& Workspace::getProjects() const { return this->_proje
 
 
 std::string Workspace::getDataFolder(const char *_process) const {
-
-
 #ifndef PLATFORM_WINDOWS
+    const char* xdg_data_home = getenv("XDG_DATA_HOME");
+    std::string data_home_folder;
+    
+    if (xdg_data_home) {
+        data_home_folder = xdg_data_home;
+    } else {
+        // Fallback to default XDG location
+        const char* home = getenv("HOME");
+        data_home_folder = home ? std::string(home) + "/.local/share" : "/tmp";
+    }
+    
     const char* lastSlash = strrchr(_process, '/');
-    std::string data_home_folder = getenv("XDG_DATA_HOME");
     if (!lastSlash)
         data_home_folder = data_home_folder + "/" + _process + "/";
     else
         data_home_folder = data_home_folder + lastSlash + "/";
+        
 #else
-    const char* appdata = getenv("APPDATA");
-    BOTAPICA_LOG_WARN("AppData: " << (appdata ? appdata : "Not Set"));
-
-    std::string data_home_folder;
-    if (appdata) {
-        const char* lastSlash = strrchr(_process, '\\');  // Use backslash for Windows
-        data_home_folder = appdata;
-        if (!lastSlash)
-            data_home_folder = data_home_folder + "\\" + _process + "\\";
-        else
-            data_home_folder = data_home_folder + lastSlash + "\\";
-    }
+    // Windows code remains the same...
 #endif
-  return data_home_folder;
+    
+    return data_home_folder;
 }
 
 Workspace::Workspace(const char *_process) {

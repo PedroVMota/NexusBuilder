@@ -1,4 +1,5 @@
 #include "GUIWorkspace.h"
+#include "GUICreateProject.h"
 #include "Interfaces/GUIView.h"
 #include "imgui.h"
 #include "main.h"
@@ -11,6 +12,7 @@ void GUIWorkspace::renderHeaderSection()
         if (ImGui::BeginMenu("File")) {
             if (ImGui::MenuItem("New")) {
                 // Handle new file
+                this->view = GUICreateProject::create(this->engine);
             }
             if (ImGui::MenuItem("Open")) {
                 // Handle open file
