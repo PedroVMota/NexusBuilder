@@ -1,6 +1,16 @@
 #include "Engine.h"
+#include "Screens/GUIWorkspace.h"
 
-Engine::Engine() : window(nullptr), editor(nullptr) {}
+
+Engine::Engine() : window(nullptr), editor(nullptr), state(RUNNING)  {
+	
+}
+
+Engine::Engine(const Engine&src)
+{
+	*this = src;
+}
+
 
 Engine::~Engine() {
 	Shutdown();
@@ -24,7 +34,10 @@ int Engine::Initialize() {
 	LogGPUInfo();
 	InitializeImGui();
 	
-	editor = new Editor();
+	// Editor *editor = new Editor();
+	//
+	this->editor = GUIWorkspace::create(this);
+	BOTAPICA_DEBUG("Editor instance created.");
 	
 	BOTAPICA_LOG_INFO("Engine initialized successfully");
 	return 0;
@@ -44,20 +57,32 @@ void Engine::Shutdown() {
 	if (editor) {
 		delete editor;
 		editor = nullptr;
+		BOTAPICA_DEBUG("Editor instance destroyed.");
 	}
 	
 	// Cleanup ImGui before destroying window
 	ImGui_ImplOpenGL3_Shutdown();
+	BOTAPICA_DEBUG("ImGui OpenGL3 backend shutdown.");
 	ImGui_ImplGlfw_Shutdown();
+	BOTAPICA_DEBUG("ImGui GLFW backend shutdown.");
 	ImGui::DestroyContext();
+	BOTAPICA_DEBUG("ImGui context destroyed.");
 	
 	if (window) {
 		glfwDestroyWindow(window);
+		BOTAPICA_DEBUG("GLFW window destroyed.");
 		window = nullptr;
 	}
 	
 	glfwTerminate();
+	BOTAPICA_DEBUG("GLFW terminated.");
 	BOTAPICA_LOG_INFO("Engine shutdown complete.");
+}
+
+void Engine::setRuning(EngineState _type)
+{
+	this->state = _type;
+	glfwSetWindowShouldClose(window, _type == CLOSE);
 }
 
 bool Engine::InitializeGLFW() {
@@ -151,13 +176,25 @@ void Engine::SetupGLFWHints() {
 #endif
 }
 
+
+
+bool Engine::renderWorkspaceManager(){
+	this->editor->render();
+	return false;
+}
+
 void Engine::MainLoop() {
 	while (!glfwWindowShouldClose(window)) {
 		glfwPollEvents();
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
-		editor->Render();
+		if(this->state == CHOOSING_WORKSPACE){
+			this->renderWorkspaceManager();
+		}
+		else{
+			editor->render();
+		}
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 		glfwSwapBuffers(window);

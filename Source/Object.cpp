@@ -1,5 +1,5 @@
-#include "../Include/Object.h"
-#include "../Include/ObjectManager.h"
+#include "Object.h"
+#include "ObjectManager.h"
 
 uint32 Object::s_NextInstanceID = 1;
 

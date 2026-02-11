@@ -109,12 +109,12 @@ defines({
 
 filter("configurations:Debug")
 runtime("Debug")
-symbols("on")
+symbols("Full")  -- Full debug info
 optimize("off")
 
 filter("configurations:Release")
 runtime("Release")
-symbols("on")
+symbols("off")
 optimize("on")
 
 project("ImGui")
@@ -174,15 +174,16 @@ objdir("bin-int/" .. outputdir .. "/%{prj.name}")
 targetname("NexusBuilder")
 
 files({
-	"Source/**.h",
 	"Source/**.cpp",
 	"Source/**/*.cpp",
+	"Include/*.h",
 	"Include/**.h",
 	"Shaders/**",
 })
 
 includedirs({
 	"Include",
+	"Include/**",
 	"lib/glfw/include",
 	"lib/imgui",
 	"lib/imgui/backends",

@@ -81,6 +81,25 @@
    obj:/usr/lib/libnvidia-eglcore.so*
 }
 {
+   NVIDIA-GLCore-Realloc-Zero-v2
+   Memcheck:Cond
+   fun:realloc
+   obj:/usr/lib/libnvidia-glcore.so*
+   obj:/usr/lib/libGLX_nvidia.so*
+   ...
+   fun:_dl_init
+}
+{
+   NVIDIA-GLCore-Posix-Memalign-Zero-v2
+   Memcheck:Param
+   posix_memalign(size)
+   fun:posix_memalign
+   obj:/usr/lib/libnvidia-glcore.so*
+   obj:/usr/lib/libGLX_nvidia.so*
+   ...
+   fun:_dl_init
+}
+{
    DBUS-Message-Leak
    Memcheck:Leak
    fun:calloc

@@ -1,5 +1,6 @@
 #pragma once
 
+#define PROCESS_NAME "NexusBuilder"
 // Configuration macros
 #ifndef _GNU_SOURCE
 	#define _GNU_SOURCE

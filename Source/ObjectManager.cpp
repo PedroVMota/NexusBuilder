@@ -1,5 +1,5 @@
-#include "../Include/ObjectManager.h"
-#include "../Include/Object.h"
+#include "ObjectManager.h"
+#include "Object.h"
 
 std::vector<Object*> ObjectManager::s_AllObjects;
 std::vector<Object*> ObjectManager::s_ObjectsToDestroy;
